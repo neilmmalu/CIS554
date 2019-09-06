@@ -64,26 +64,7 @@ void DoublyLinkedList::sort() {
 		p1 = p1->next;
 		length += 1;
 	}
-	/*
-	for (int freq = 1; freq < length; freq++) {
-		p1 = p2 = head;
-		int count;
-		while (p1) {
-			count = 0;
-			while (p2 && p2->value == p1->value) {
-				count++;
-				p2 = p2->next;
-			}
-			cout << p1->value << " " << count << endl;
-			if (count == freq && p1 != head) {
-				// swap node blocks
-			}
-
-			p1 = p2;
-
-		}
-		
-	}*/
+	
 	p1 = head;
 	Node* p3;
 	while (p1) {
