@@ -173,7 +173,7 @@ void DoublyLinkedList::printBackward() {
 
 int main() {
 	DoublyLinkedList d1;
-	d1.makeRandomList(7, 1);
+	d1.makeRandomList(30, 10);
 	d1.printForward();
 	d1.printBackward();
 
