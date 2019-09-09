@@ -67,27 +67,79 @@ void DoublyLinkedList::sort() {
 	
 	p1 = head;
 	Node* p3;
-	while (p1) {
-		p2 = p1->next;
-		int count1 = 1;
-		while (p2 && p2->value == p1->value) {
-			p2 = p2->next;
-			count1++;
-		}
-		p3 = p2->next;
-		int count2 = 1;
-		while (p3 && p3->value == p2->value) {
-			p3 = p3->next;
-			count2++;
-		}
+	Node* passes = head;
 
-		if (count1 <= count2) {
-			p1 = p2;
+	while (passes) {
+		while (p1) {
+			//printForward();
+			p2 = p1->next;
+			int count1 = 1;
+			while (p2 && p2->value == p1->value) {
+				p2 = p2->next;
+				count1++;
+			}
+
+			if (!p2) break;
+
+			p3 = p2->next;
+			int count2 = 1;
+			while (p3 && p3->value == p2->value) {
+				if (!p3->next) {
+					count2++;
+					break;
+				}
+				p3 = p3->next;
+				count2++;
+			}
+
+			//cout << "p1 = " << p1->value << " p2 = " << p2->value << " p3 = " << p3->value << " count1 = " << count1 << " count2 = " << count2 << endl;
+			//cout << "passes " << passes->value << endl;
+
+			// Compare the frequencies. If first one is smaller, advance the pointer without swapping
+			if (count1 <= count2) {
+				p1 = p2;
+			}
+			else {
+				//swap blocks
+
+				//Edge case for head node
+				if (p1 == head) {
+					Node* p4 = p3->previous;
+					p2->previous->next = p3;
+					p3->previous->next = p1;
+					p3->previous = p2->previous;
+					p1->previous = p4;
+					p2->previous = nullptr;
+					head = p2;
+				}
+
+				//Edge case for tail
+				else if (p3 == tail) {
+					tail = p2->previous;
+					p1->previous->next = p2;
+					p2->previous->next = nullptr;
+					p2->previous = p1->previous;
+					p3->next = p1;
+					p1->previous = p3;
+				}
+
+				//Swapping consecutive nodes
+				else {
+					Node* p4 = p3->previous;
+					p3->previous->next = p1;
+					p2->previous->next = p3;
+					p1->previous->next = p2;
+					p3->previous = p2->previous;
+					p2->previous = p1->previous;
+					p1->previous = p4;
+				}
+
+			}
 		}
-		else {
-			//swap blocks
-		}
+		passes = passes->next;
+		p1 = head;
 	}
+	
 }
 
 void DoublyLinkedList::makeRandomList(int m, int n) {
@@ -121,7 +173,7 @@ void DoublyLinkedList::printBackward() {
 
 int main() {
 	DoublyLinkedList d1;
-	d1.makeRandomList(50, 20);
+	d1.makeRandomList(7, 1);
 	d1.printForward();
 	d1.printBackward();
 
