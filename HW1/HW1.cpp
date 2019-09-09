@@ -44,25 +44,21 @@ public:
 void DoublyLinkedList::sort() {
 	if (!head || !head->next) return;
 
-	Node* p1 = head, *p2, *p_min;
-	int min = 0, length = 0;
+	Node* p1 = head, * p2;
 
+	//Sort initially so that blocks can be moved instead of individual nodes
+	//Brute force sorting
 	while (p1) {
-		min = p1->value;
-		p_min = p1;
 		p2 = p1->next;
 		while (p2) {
-			if (p2->value < min) {
-				min = p2->value;
-				p_min = p2;
+			if (p1->value > p2->value) {
+				int temp = p1->value;
+				p1->value = p2->value;
+				p2->value = temp;
 			}
 			p2 = p2->next;
 		}
-
-		p_min->value = p1->value;
-		p1->value = min;
 		p1 = p1->next;
-		length += 1;
 	}
 	
 	p1 = head;
@@ -173,7 +169,7 @@ void DoublyLinkedList::printBackward() {
 
 int main() {
 	DoublyLinkedList d1;
-	d1.makeRandomList(30, 10);
+	d1.makeRandomList(30, 8);
 	d1.printForward();
 	d1.printBackward();
 
