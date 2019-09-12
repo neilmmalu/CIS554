@@ -47,7 +47,7 @@ void DoublyLinkedList::sort() {
 	Node* p1 = head, * p2;
 
 	//Sort initially so that blocks can be moved instead of individual nodes
-	//Brute force sorting
+	//Brute force sorting - only swapping values not nodes
 	while (p1) {
 		p2 = p1->next;
 		while (p2) {
@@ -65,6 +65,7 @@ void DoublyLinkedList::sort() {
 	Node* p3;
 	Node* passes = head;
 
+	// Swapping nodes not values.
 	while (passes) {
 		while (p1) {
 			//printForward();
@@ -77,10 +78,10 @@ void DoublyLinkedList::sort() {
 
 			if (!p2) break;
 
-			p3 = p2->next;
-			int count2 = 1;
+			p3 = p2;
+			int count2 = 0;
 			while (p3 && p3->value == p2->value) {
-				if (!p3->next) {
+				if (p3 == tail) {
 					count2++;
 					break;
 				}
@@ -97,6 +98,18 @@ void DoublyLinkedList::sort() {
 			}
 			else {
 				//swap blocks
+				// p1 is the head of the first swap block, p2 is the head of the second swap block
+				
+				//Edge case if only 2 unique values
+				if (p1 == head && p3 == tail) {
+					head = p2;
+					tail = p2->previous;
+					p2->previous->next = nullptr;
+					p2->previous = nullptr;
+					p3->next = p1;
+					p1->previous = p3;
+					return;
+				}
 
 				//Edge case for head node
 				if (p1 == head) {
@@ -109,7 +122,7 @@ void DoublyLinkedList::sort() {
 					head = p2;
 				}
 
-				//Edge case for tail
+				//Edge case for tail node
 				else if (p3 == tail) {
 					tail = p2->previous;
 					p1->previous->next = p2;
@@ -169,7 +182,7 @@ void DoublyLinkedList::printBackward() {
 
 int main() {
 	DoublyLinkedList d1;
-	d1.makeRandomList(30, 8);
+	d1.makeRandomList(50, 3);
 	d1.printForward();
 	d1.printBackward();
 
