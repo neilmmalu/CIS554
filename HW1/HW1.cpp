@@ -190,8 +190,6 @@ void DoublyLinkedList::merge(const DoublyLinkedList& L) {
 
 	Node* temp;
 	Node* l1 = head, * l2 = L.head;
-	
-	
 
 	if (l1->value < l2->value) {
 		temp = l1;
@@ -239,12 +237,13 @@ void DoublyLinkedList::remove(int m, int n) {
 	while (p1) {
 		
 		if (p1->value == m) {
-			
+			//Head is the value and only node
 			if (!head->next) {
 				delete head;
 				return;
 			}
 
+			//Special case for deleting single node
 			if (n == 1) {
 				p1->previous->next = p1->next;
 				p1->next->previous = p1->previous;
@@ -257,13 +256,14 @@ void DoublyLinkedList::remove(int m, int n) {
 				p2 = p2->next;
 				n--;
 			}
-
+			//At this point p2 points to the next of the last element that needs to be deleted (unless p2 is tail)
 			
 			if (p1 == head && p2 == tail) {
 				delete head;
 				return;
 			}
 
+			//If p2 is head, set head to p2 and return
 			if (p1 == head) {
 				head = p2;
 				p2->previous = nullptr;
@@ -271,7 +271,9 @@ void DoublyLinkedList::remove(int m, int n) {
 				return;
 			}
 
+			//If p2 is tail
 			if (p2 == tail) {
+				//If tail needs to be deleted, update the tail
 				if (n != 0 && p2->value == m) {
 					p1->previous->next = nullptr;
 					tail = p1->previous;
@@ -280,12 +282,14 @@ void DoublyLinkedList::remove(int m, int n) {
 					return;
 				}
 
+				//If tail doesnt have to be deleted. 
 				p1->previous->next = p2;
 				delete p1;
 				return;
 			}
 
 			else {
+				//Delete everything between p1 and p2
 				p1->previous->next = p2;
 				p2->previous = p1->previous;
 				delete p1;
@@ -337,19 +341,19 @@ int main() {
 	d1.printForward();
 	//d1.printBackward();
 
-	//d2.makeRandomList(50, 20);
+	d2.makeRandomList(50, 20);
 	//d2.printForward();
 	//d2.printBackward();
 	d2.sort();
 	d2.printForward();
 	
-	//d1.merge(d2);
-	//d1.printForward();
-	//d1.printBackward();
-
-	d1.remove(13, 3);
+	d1.merge(d2);
 	d1.printForward();
 	d1.printBackward();
+
+	//d1.remove(13, 3);
+	//d1.printForward();
+	//d1.printBackward();
 	getchar();
 	getchar();
 	return 0;
