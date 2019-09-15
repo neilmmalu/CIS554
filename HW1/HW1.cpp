@@ -179,6 +179,125 @@ void DoublyLinkedList::sort() {
 	
 }
 
+void DoublyLinkedList::merge(const DoublyLinkedList& L) {
+	/*
+	if (!L.head) return;
+	if (!head) {
+		head = L.head;
+		return;
+	}
+
+
+	Node* temp;
+	Node* l1 = head, * l2 = L.head;
+	
+	
+
+	if (l1->value < l2->value) {
+		temp = l1;
+		l1 = l1->next;
+	}
+	else {
+		temp = l2;
+		l2 = l2->next;
+	}
+
+	//cout << endl << l1->value << " " << l2->value << endl;
+
+	Node* result = temp;
+
+	while (l1 && l2) {
+		if (l1->value < l2->value) {
+			temp->next = l1;
+			l1->previous = temp;
+			l1 = l1->next;
+		}
+		else {
+			temp->next = l2;
+			l2->previous = temp;
+			l2 = l2->next;
+		}
+		temp = temp->next;
+	}
+
+	if (l1) {
+		temp->next = l1;
+		l1->previous = temp;
+	}
+	else if (l2) {
+		temp->next = l2;
+		l2->previous = temp;
+	}
+	head = result;*/
+}
+
+void DoublyLinkedList::remove(int m, int n) {
+	if (!head) return;
+	if (n == 0) return;
+
+	Node* p1 = head;
+	while (p1) {
+		
+		if (p1->value == m) {
+			
+			if (!head->next) {
+				delete head;
+				return;
+			}
+
+			if (n == 1) {
+				p1->previous->next = p1->next;
+				p1->next->previous = p1->previous;
+				delete p1;
+				return;
+			}
+
+			Node* p2 = p1;
+			while (p2->value == m && n && p2->next) {
+				p2 = p2->next;
+				n--;
+			}
+
+			
+			if (p1 == head && p2 == tail) {
+				delete head;
+				return;
+			}
+
+			if (p1 == head) {
+				head = p2;
+				p2->previous = nullptr;
+				delete p1;
+				return;
+			}
+
+			if (p2 == tail) {
+				if (n != 0 && p2->value == m) {
+					p1->previous->next = nullptr;
+					tail = p1->previous;
+					delete p1;
+					delete p2;
+					return;
+				}
+
+				p1->previous->next = p2;
+				delete p1;
+				return;
+			}
+
+			else {
+				p1->previous->next = p2;
+				p2->previous = p1->previous;
+				delete p1;
+				return;
+			}
+		}
+		p1 = p1->next;
+		
+	}
+
+}
+
 void DoublyLinkedList::makeRandomList(int m, int n) {
 
 	for (int i = 0; i < m; i++) {
@@ -211,20 +330,22 @@ void DoublyLinkedList::printBackward() {
 int main() {
 	DoublyLinkedList d1, d2;
 	d1.makeRandomList(50, 20);
-	d1.printForward();
-	d1.printBackward();
+	//d1.printForward();
+	//d1.printBackward();
 
 	d1.sort();
 	d1.printForward();
-	d1.printBackward();
+	//d1.printBackward();
 
-	d2.makeRandomList(50, 20);
-	d1.printForward();
-	d1.printBackward();
-
-	d1.merge(d2);
-	d1.printForward();
-	d1.printBackward();
+	//d2.makeRandomList(50, 20);
+	//d2.printForward();
+	//d2.printBackward();
+	d2.sort();
+	d2.printForward();
+	
+	//d1.merge(d2);
+	//d1.printForward();
+	//d1.printBackward();
 
 	d1.remove(13, 3);
 	d1.printForward();
