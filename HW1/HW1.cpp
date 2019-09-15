@@ -1,11 +1,22 @@
 //HW1 Neil Malu
 //SU netID: nemalu SUID: 635692900
 
-//CIS554 HW1
-//Due: 11:59PM, Friday ( September 13)
-//Do not modify main funaiton.
-//Do not introduce new functions
-//In-place implementation is required.
+//CIS554 HW2
+//Due: 11:59PM, Monday ( September 23)
+/*
+Implement two member functions, merge and remove, of the DoublyLinkedList class of HW1.
+The descriptions of the two member functions are given below.
+In the implementation of the two member functions, you are not allowed to modify values of nodes.
+You only can modify pointers of nodes.
+Again, you are not allowed to create new nodes in your implementation.  No external structures (such as arrays,
+linked list, map, etc.) are allowed.  You can use some temporary pointes or variables for your
+implementation.
+
+When you submit your code, do not modify main function.
+
+Do not introduce new functions
+In-place implementation is required.  (This means all operations should directly performed on the list.)
+*/
 
 #include <iostream>
 using namespace std;
@@ -39,6 +50,23 @@ public:
 	//If your algorithm is inefficient, you might lose points.
 	//You will not modify L.
 
+	void merge(const DoublyLinkedList& L);
+	/*
+	Given an already sorted DoublyLinkedList (using the sort() in HW1), take
+	another already sorted list L as function argument, and merge L into the current
+	list to form a single DoublyLinkedList.
+	You are not allowed to invoke sort() to do merge.
+	Merge is a much easier task and you need to develop a new, efficient way to do merge.
+	*/
+
+	void remove(int m, int n);
+	/*
+	Given an already sorted DoublyLinkedList (using the sort() in HW1),
+	remove n times of value m from the DoublyLinkedList
+	if n is more than the total number of m's in the DoublyLinkedList,
+	then remove all m's from the list.
+	If m does not exist in the list, then do nothing.
+	*/
 };
 
 void DoublyLinkedList::sort() {
@@ -181,8 +209,8 @@ void DoublyLinkedList::printBackward() {
 }
 
 int main() {
-	DoublyLinkedList d1;
-	d1.makeRandomList(50, 3);
+	DoublyLinkedList d1, d2;
+	d1.makeRandomList(50, 20);
 	d1.printForward();
 	d1.printBackward();
 
@@ -190,6 +218,17 @@ int main() {
 	d1.printForward();
 	d1.printBackward();
 
+	d2.makeRandomList(50, 20);
+	d1.printForward();
+	d1.printBackward();
+
+	d1.merge(d2);
+	d1.printForward();
+	d1.printBackward();
+
+	d1.remove(13, 3);
+	d1.printForward();
+	d1.printBackward();
 	getchar();
 	getchar();
 	return 0;
