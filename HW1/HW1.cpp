@@ -180,62 +180,37 @@ void DoublyLinkedList::sort() {
 }
 
 void DoublyLinkedList::merge(const DoublyLinkedList& L) {
-	/*
-	if (!L.head) return;
 	if (!head) {
 		head = L.head;
 		return;
 	}
 
+	if (!L.head) return;
 
-	Node* temp;
 	Node* l1 = head, * l2 = L.head;
 
-	if (l1->value < l2->value) {
-		temp = l1;
-		l1 = l1->next;
-	}
-	else {
-		temp = l2;
-		l2 = l2->next;
-	}
-
-	//cout << endl << l1->value << " " << l2->value << endl;
-
-	Node* result = temp;
-
-	while (l1 && l2) {
-		if (l1->value < l2->value) {
-			temp->next = l1;
-			l1->previous = temp;
-			l1 = l1->next;
-		}
-		else {
-			temp->next = l2;
-			l2->previous = temp;
-			l2 = l2->next;
-		}
-		temp = temp->next;
-	}
-
-	if (l1) {
-		temp->next = l1;
-		l1->previous = temp;
-	}
-	else if (l2) {
-		temp->next = l2;
-		l2->previous = temp;
-	}
-	head = result;*/
+	
 }
 
 void DoublyLinkedList::remove(int m, int n) {
 	if (!head) return;
 	if (n == 0) return;
 
+	if (head->value == m) {
+		Node* temp = head;
+		while (head->value == m && n) {
+			head = head->next;
+			head->previous = nullptr;
+			delete temp;
+			temp = head;
+			n--;
+		}
+		return;
+	}
+
 	Node* p1 = head;
 	while (p1) {
-		
+		/*
 		if (p1->value == m) {
 			//Head is the value and only node
 			if (!head->next) {
@@ -295,7 +270,87 @@ void DoublyLinkedList::remove(int m, int n) {
 				delete p1;
 				return;
 			}
+		}*/
+		
+		Node* p2 = p1;
+		int count = 0;
+		if (p1->value == m) {
+			while (p2 && p2->value == m) {
+				p2 = p2->next;
+				count++;
+			}
+
+			if (count <= n) {
+				p1->previous->next = p2;
+				if (p2 != nullptr) p2->previous = p1->previous;
+				else tail = p1->previous;
+				delete p1;
+				return;
+			}
+			else {
+				//Case where you have to re-insert in sorted position
+				Node* temp;
+				p1->previous->next = p2;
+				if (p2 != nullptr) {
+					p2->previous->next = nullptr;
+					p2->previous = p1->previous;
+				}
+				else tail = p1->previous;
+				while (n) {
+					temp = p1;
+					p1 = p1->next;
+					delete temp;
+					n--;
+					count--;
+				}
+
+				//At this point, p1 points to the block of remaining occ of the number, count is the freq
+				temp = head;
+				while (temp) {
+					p2 = temp;
+					int count2 = 0;
+
+					//At the tail
+					if (temp == tail) {
+						temp->next = p1;
+						p1->previous = temp;
+						while (p1->next) p1 = p1->next;
+						tail = p1;
+						return;
+					}
+
+					while (p2->value == temp->value) {
+						p2 = p2->next;
+						count2++;
+					}
+					
+					// Position at which we need to insert p1
+					if (count2 > count || (count2 == count && p1->value < temp->value)) {
+						Node* p3 = p1;
+						while (p3->next) p3 = p3->next;
+						//If insert is at head
+						if (temp == head) {
+							p3->next = temp;
+							head = p1;
+							p1->previous = nullptr;
+							return;
+						}
+						else {
+							p3->next = temp;
+							temp->previous->next = p1;
+							p1->previous = temp->previous;
+							temp->previous = p3;
+							return;
+						}
+					}
+					//Continue
+					else
+						temp = temp->next;
+				}
+				
+			}
 		}
+
 		p1 = p1->next;
 		
 	}
@@ -341,19 +396,19 @@ int main() {
 	d1.printForward();
 	//d1.printBackward();
 
-	d2.makeRandomList(50, 20);
+	//d2.makeRandomList(50, 20);
 	//d2.printForward();
 	//d2.printBackward();
-	d2.sort();
-	d2.printForward();
+	//d2.sort();
+	//d2.printForward();
 	
-	d1.merge(d2);
-	d1.printForward();
-	d1.printBackward();
-
-	//d1.remove(13, 3);
+	//d1.merge(d2);
 	//d1.printForward();
 	//d1.printBackward();
+
+	d1.remove(11, 5);
+	d1.printForward();
+	d1.printBackward();
 	getchar();
 	getchar();
 	return 0;
