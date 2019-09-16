@@ -210,67 +210,6 @@ void DoublyLinkedList::remove(int m, int n) {
 
 	Node* p1 = head;
 	while (p1) {
-		/*
-		if (p1->value == m) {
-			//Head is the value and only node
-			if (!head->next) {
-				delete head;
-				return;
-			}
-
-			//Special case for deleting single node
-			if (n == 1) {
-				p1->previous->next = p1->next;
-				p1->next->previous = p1->previous;
-				delete p1;
-				return;
-			}
-
-			Node* p2 = p1;
-			while (p2->value == m && n && p2->next) {
-				p2 = p2->next;
-				n--;
-			}
-			//At this point p2 points to the next of the last element that needs to be deleted (unless p2 is tail)
-			
-			if (p1 == head && p2 == tail) {
-				delete head;
-				return;
-			}
-
-			//If p2 is head, set head to p2 and return
-			if (p1 == head) {
-				head = p2;
-				p2->previous = nullptr;
-				delete p1;
-				return;
-			}
-
-			//If p2 is tail
-			if (p2 == tail) {
-				//If tail needs to be deleted, update the tail
-				if (n != 0 && p2->value == m) {
-					p1->previous->next = nullptr;
-					tail = p1->previous;
-					delete p1;
-					delete p2;
-					return;
-				}
-
-				//If tail doesnt have to be deleted. 
-				p1->previous->next = p2;
-				delete p1;
-				return;
-			}
-
-			else {
-				//Delete everything between p1 and p2
-				p1->previous->next = p2;
-				p2->previous = p1->previous;
-				delete p1;
-				return;
-			}
-		}*/
 		
 		Node* p2 = p1;
 		int count = 0;
