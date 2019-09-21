@@ -189,6 +189,63 @@ void DoublyLinkedList::merge(const DoublyLinkedList& L) {
 
 	Node* l1 = head, * l2 = L.head;
 
+	while(l2){
+		while(l1){
+			printForward();
+			l1 = head;
+			// cout << "l2: " << l2->value << endl;
+			while(l1 && l2 && l1->value != l2->value) l1 = l1->next;
+			
+			// cout << "l1: " << l1->value << endl;
+			//Insert at head
+			if(!l1){
+				Node* temp = l2->next;
+				l2->previous = nullptr;
+				l2->next = head;
+				head->previous = l2;
+				head = l2;
+				l2 = temp;
+				break;
+			}
+
+			// Number exists in sorted list. We insert the number in the block and perform a frequency check.
+			else{
+				Node* temp = l2->next;
+				l2->previous = l1->previous;
+				l2->next = l1;
+				l1->previous = l2;
+				l1 = l1->previous;
+				l2 = temp;
+
+				//l1 points to new block with added node. Now we check the frequency. While freq1 < freq2 keep moving this block
+				int count1, count2 = 0;
+
+				while(l1->next && l1->value == l1->next->value){
+					l1 = l1->next;
+					count1++;
+				}
+
+				//l1 points to last element of modified block.
+				if(!l1) break;
+
+				Node* p1 = l1->next;
+				while(p1->next && p1->value == p1->next->value){
+					p1 = p1->next;
+					count2++;
+				}
+
+				//If frequency of block is still less than frequency of next block no additional sorting is required.
+				if(count1 < count2) break;
+
+				//Need to find position to move the modified block
+				// else{
+
+				// }
+
+			}
+		}
+		l2 = l2->next;
+	}
 	
 }
 
@@ -335,19 +392,17 @@ int main() {
 	d1.printForward();
 	//d1.printBackward();
 
-	//d2.makeRandomList(50, 20);
-	//d2.printForward();
+	d2.makeRandomList(50, 20);
+	d2.printForward();
 	//d2.printBackward();
-	//d2.sort();
-	//d2.printForward();
 	
-	//d1.merge(d2);
-	//d1.printForward();
+	d1.merge(d2);
+	d1.printForward();
 	//d1.printBackward();
 
-	d1.remove(11, 5);
-	d1.printForward();
-	d1.printBackward();
+	//d1.remove(9, 5);
+	//d1.printForward();
+	//d1.printBackward();
 	getchar();
 	getchar();
 	return 0;
