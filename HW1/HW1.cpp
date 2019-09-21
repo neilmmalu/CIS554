@@ -193,58 +193,80 @@ void DoublyLinkedList::merge(const DoublyLinkedList& L) {
 		while(l1){
 			printForward();
 			l1 = head;
-			// cout << "l2: " << l2->value << endl;
+
+			if (!l2) return;
+			//cout << "l1: " << l1->value << endl;
 			while(l1 && l2 && l1->value != l2->value) l1 = l1->next;
 			
-			// cout << "l1: " << l1->value << endl;
+			if(l1) cout << "l1: " << l1->value << endl;
 			//Insert at head
-			if(!l1){
+			if(!l1 || l1 == head){
+				
 				Node* temp = l2->next;
 				l2->previous = nullptr;
 				l2->next = head;
 				head->previous = l2;
 				head = l2;
 				l2 = temp;
-				break;
 			}
-
+			 
 			// Number exists in sorted list. We insert the number in the block and perform a frequency check.
 			else{
+				//cout << "l1: " << l1->value << endl;
 				Node* temp = l2->next;
 				l2->previous = l1->previous;
 				l2->next = l1;
+				l1->previous->next = l2;
 				l1->previous = l2;
 				l1 = l1->previous;
 				l2 = temp;
-
 				//l1 points to new block with added node. Now we check the frequency. While freq1 < freq2 keep moving this block
-				int count1, count2 = 0;
+				int count1 = 0, count2 = 1;
 
-				while(l1->next && l1->value == l1->next->value){
-					l1 = l1->next;
+				Node* p1 = l1;
+				while (p1 && p1->value == l1->value) {
 					count1++;
-				}
-
-				//l1 points to last element of modified block.
-				if(!l1) break;
-
-				Node* p1 = l1->next;
-				while(p1->next && p1->value == p1->next->value){
 					p1 = p1->next;
-					count2++;
 				}
 
-				//If frequency of block is still less than frequency of next block no additional sorting is required.
-				if(count1 < count2) break;
+				//If the block is the last block in the list
+				if (!p1) break;
 
-				//Need to find position to move the modified block
-				// else{
+				//At this point p1 points to the first element of the next block
+				Node* p2 = p1;
+				while (p2->next && p1->value == p2->value) {
+					count2++;
+					p2 = p2->next;
+				}
+				cout << "count1: " << count1 << endl;
+				cout << "count2: " << count2 << endl;
+				if (count1 <= count2) break;
 
-				// }
+				//p1 points to tail block and swap is required
+				//p2 points to last element of next block
+				
+
+				//Checks frequencies of blocks on right side until it hits the tail block
+				/*
+				while (count1 > count2) {
+					if (p2 == tail) {
+						Node* temp = p1->previous;
+						temp->next = nullptr;
+						p1->previous = l1->previous;
+						l1->previous->next = p1;
+						p2->next = l1;
+						l1->previous = p2;
+						tail = temp;
+						break;
+					}
+
+					
+				}*/
 
 			}
+			l1 = head;
 		}
-		l2 = l2->next;
+		if(l2) l2 = l2->next;
 	}
 	
 }
