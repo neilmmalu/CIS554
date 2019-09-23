@@ -52,20 +52,21 @@ public:
 
 	void merge(const DoublyLinkedList& L);
 	/*
-	Given an already sorted DoublyLinkedList (using the sort() in HW1), take
-	another already sorted list L as function argument, and merge L into the current
-	list to form a single DoublyLinkedList.
-	You are not allowed to invoke sort() to do merge.
-	Merge is a much easier task and you need to develop a new, efficient way to do merge.
+	Given an already sorted DoublyLinkedList (i.e., the result of HW1) , take
+	another unsorted list L as function argument, and merge L into the current
+	list to form a single sorted DoublyLinkedList.  The result of merge is a sorted list.
+	You are not allowed to invoke sort() in HW1 in your implementation of merge.
 	*/
 
 	void remove(int m, int n);
 	/*
-	Given an already sorted DoublyLinkedList (using the sort() in HW1),
-	remove n times of value m from the DoublyLinkedList
-	if n is more than the total number of m's in the DoublyLinkedList,
+	Given an already sorted DoublyLinkedList (i.e., the result of the HW1),
+	remove n times of value m from the DoublyLinkedList.
+	If n is more than the total number of m's in the DoublyLinkedList,
 	then remove all m's from the list.
 	If m does not exist in the list, then do nothing.
+	The result of remove will be a sorted list.
+	You are not allowed to invoke sort() in HW1 in your implementation of remove.
 	*/
 };
 
