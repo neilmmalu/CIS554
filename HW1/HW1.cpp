@@ -2,15 +2,17 @@
 //SU netID: nemalu SUID: 635692900
 
 //CIS554 HW2
-//Due: 11:59PM, Monday ( September 23)
+//Due: 11:59PM, Wednesday ( September 25)
 /*
-Implement two member functions, merge and remove, of the DoublyLinkedList class of HW1.
+-   Implement two member functions, merge and remove, of the DoublyLinkedList class of HW1.
 The descriptions of the two member functions are given below.
-In the implementation of the two member functions, you are not allowed to modify values of nodes.
+-   In the implementation of merge and remove, you are not allowed to modify values of nodes.
 You only can modify pointers of nodes.
-Again, you are not allowed to create new nodes in your implementation.  No external structures (such as arrays,
+-   Again, you are not allowed to create new nodes in your implementation.  No external structures (such as arrays,
 linked list, map, etc.) are allowed.  You can use some temporary pointes or variables for your
 implementation.
+-   In implementaing merge and remove, you are not allowed to call sort() in HW1
+
 
 When you submit your code, do not modify main function.
 
