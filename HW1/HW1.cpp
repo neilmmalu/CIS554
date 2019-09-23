@@ -191,14 +191,12 @@ void DoublyLinkedList::merge(const DoublyLinkedList& L) {
 
 	while(l2){
 		while(l1){
-			printForward();
 			l1 = head;
 
 			if (!l2) return;
 			//cout << "l1: " << l1->value << endl;
 			while(l1 && l2 && l1->value != l2->value) l1 = l1->next;
 			
-			if(l1) cout << "l1: " << l1->value << endl;
 			//Insert at head
 			if(!l1 || l1 == head){
 				
@@ -208,6 +206,75 @@ void DoublyLinkedList::merge(const DoublyLinkedList& L) {
 				head->previous = l2;
 				head = l2;
 				l2 = temp;
+
+				l1 = head;
+				int count1 = 0, count2 = 1;
+
+				Node* p1 = l1;
+				while (p1 && p1->value == l1->value) {
+					count1++;
+					p1 = p1->next;
+				}
+
+				//If the block is the last block in the list
+				if (!p1) break;
+
+				//At this point p1 points to the first element of the next block
+				Node* p2 = p1;
+				while (p2->next && p1->value == p2->next->value) {
+					count2++;
+					p2 = p2->next;
+				}
+				if (count1 < count2) break;
+
+				while (count1 >= count2) {
+					//p1 points to tail block and swap is required
+					if (p2 == tail) {
+						Node* temp = p1->previous;
+						temp->next = nullptr;
+						p1->previous = l1->previous;
+						p2->next = l1;
+						l1->previous = p2;
+						tail = temp;
+						head = p1;
+						break;
+					}
+
+					Node* temp = p2->next;
+
+					if (l1 == head) {
+						l1->previous = p2;
+						p1->previous->next = p2->next;
+						p2->next->previous = p1->previous;
+						p1->previous = nullptr;
+						p2->next = l1;
+						head = p1;
+
+					}
+					else {
+						l1->previous->next = p1;
+						p1->previous->next = p2->next;
+						p2->next->previous = p1->previous;
+						p2->next = l1;
+						p1->previous = l1->previous;
+						l1->previous = p2;
+					}
+					
+					
+
+					if (temp) p1 = p2 = temp;
+					else break;
+
+					count2 = 1;
+					while (p2->next && p1->value == p2->next->value) {
+						count2++;
+						p2 = p2->next;
+					}
+
+					if (count2 == count1 && l1->value < p1->value) break;
+
+				}
+
 			}
 			 
 			// Number exists in sorted list. We insert the number in the block and perform a frequency check.
@@ -220,6 +287,7 @@ void DoublyLinkedList::merge(const DoublyLinkedList& L) {
 				l1->previous = l2;
 				l1 = l1->previous;
 				l2 = temp;
+
 				//l1 points to new block with added node. Now we check the frequency. While freq1 < freq2 keep moving this block
 				int count1 = 0, count2 = 1;
 
@@ -234,21 +302,19 @@ void DoublyLinkedList::merge(const DoublyLinkedList& L) {
 
 				//At this point p1 points to the first element of the next block
 				Node* p2 = p1;
-				while (p2->next && p1->value == p2->value) {
+				while (p2->next && p1->value == p2->next->value) {
 					count2++;
 					p2 = p2->next;
 				}
-				cout << "count1: " << count1 << endl;
-				cout << "count2: " << count2 << endl;
-				if (count1 <= count2) break;
+				if (count1 < count2) break;
 
-				//p1 points to tail block and swap is required
+				//l1 points to the first element of the current block
+				//p1 points to the first element of the next block
 				//p2 points to last element of next block
 				
-
 				//Checks frequencies of blocks on right side until it hits the tail block
-				/*
-				while (count1 > count2) {
+				while (count1 >= count2) {
+					//p1 points to tail block and swap is required
 					if (p2 == tail) {
 						Node* temp = p1->previous;
 						temp->next = nullptr;
@@ -260,8 +326,26 @@ void DoublyLinkedList::merge(const DoublyLinkedList& L) {
 						break;
 					}
 
+					Node* temp = p2->next;
+					l1->previous->next = p1;
+					p1->previous->next = p2->next;
+					p2->next->previous = p1->previous;
+					p2->next = l1;
+					p1->previous = l1->previous;
+					l1->previous = p2;
 					
-				}*/
+					if (temp) p1 = p2 = temp; 
+					else break;
+
+					count2 = 1;
+					while (p2->next && p1->value == p2->next->value) {
+						count2++;
+						p2 = p2->next;
+					}
+
+					if (count2 == count1 && l1->value < p1->value) break;
+
+				}
 
 			}
 			l1 = head;
@@ -407,24 +491,24 @@ void DoublyLinkedList::printBackward() {
 int main() {
 	DoublyLinkedList d1, d2;
 	d1.makeRandomList(50, 20);
-	//d1.printForward();
-	//d1.printBackward();
+	d1.printForward();
+	d1.printBackward();
 
 	d1.sort();
 	d1.printForward();
-	//d1.printBackward();
+	d1.printBackward();
 
 	d2.makeRandomList(50, 20);
-	d2.printForward();
-	//d2.printBackward();
-	
+	d1.printForward();
+	d1.printBackward();
+
 	d1.merge(d2);
 	d1.printForward();
-	//d1.printBackward();
+	d1.printBackward();
 
-	//d1.remove(9, 5);
-	//d1.printForward();
-	//d1.printBackward();
+	d1.remove(13, 3);
+	d1.printForward();
+	d1.printBackward();
 	getchar();
 	getchar();
 	return 0;
