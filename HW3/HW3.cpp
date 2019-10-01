@@ -36,6 +36,7 @@ void print_DB(map<int, map<int, list<course*>* > >& DB);
 //for example print_DB is simply cout << DB;
 //Courses in a semeste are sorted alphabetically.
 
+
 int main() {
     //Do not change code for main function
     map<int, map<int, list <course*>*> > DB;
@@ -48,7 +49,7 @@ int main() {
     add_course(DB, 20171, 11111, C2);
     print_student_semester_courses(DB, 20171, 11111);
 
-    drop_course(DB, 20171, 11111, C1);
+    /*drop_course(DB, 20171, 11111, C1);
     print_student_semester_courses(DB, 20171, 11111);
 
     add_course(DB, 20172, 11111, C2);
@@ -71,16 +72,18 @@ int main() {
     print_student_semester_courses(DB, 20172, 11112);
     print_student_all_courses(DB, 11112);
     print_DB(DB);
-    remove_student(DB, 11111);
+    remove_student(DB, 11111);*/
     print_DB(DB);
     getchar();
     getchar();
     return 0;
 }
 
-void add_student(map<int, map<int, list<course*>* >>& DB, int id) {
-
-
+void add_student(map<int, map<int, list<course*>* >>& DB, int id) { 
+    if(DB.find(id) == DB.end()) {
+        map<int, list<course*>*> sem;
+        DB[id] = sem;
+    }
 }
 
 void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
@@ -89,7 +92,24 @@ void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
 
 
 void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, course c) {
+    //if student does not exist
+    if(DB.find(id) == DB.end()) return;
 
+    auto student = DB[id];
+    //if semester does not exist, create semester
+    if(student.find(semester) == student.end()){
+        list<course*>* l;
+        l->push_back(&c);
+        student[semester] = l;
+        cout << l;
+    }
+    //if semester exists 
+    else{
+        auto sem = student[semester];
+        for(auto it = sem->begin(); it != sem->end(); it++){
+            if(&c == *it) return;
+        }
+    }
 }
 
 void drop_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, course c) {
@@ -97,17 +117,52 @@ void drop_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, 
 }
 
 void print_student_semester_courses(map<int, map<int, list<course*>* >>& DB, int semester, int id) {
-
+    cout << DB[id][semester] << endl;
 }
 void print_student_all_courses(map<int, map<int, list<course*>* >>& DB, int id) {
 
 }
 
 void print_DB(map<int, map<int, list<course*>* >>& DB) {
-
+    // cout << DB;
 }
 //Some additional functions for overloading operator<<
 
+// ostream& operator<<(ostream& str, const map<int, map<int, list<course*>* >>& DB) {
+//     for (auto i : DB) { 
+//         str <<  "student id = " << i.first << endl;
+//         for(auto j: i.second){
+//             str << "semester = " << j.first << endl;
+//         }
+//     }
+//     return str;
+// }
+
+template <class T> ostream& operator<<(ostream& str, const map<int, T> &M){
+    
+}
+
+template <class T> ostream& operator<<(ostream& str, const map<int, T*> &M){
+    for (auto i : M) { 
+        str <<  "student id = " << i.first << endl;
+        for(auto j: i.second){
+            str << "semester = " << j.first << endl;
+        }
+    }
+    return str;
+}
+
+template <class T> ostream& operator<<(ostream& str, const list<T *> &L){
+    for(auto c: L){
+        str << *c;
+    }
+    return str;
+}
+
+ostream& operator<<(ostream& str, const course &c){
+    str << c.name << " " << c.section << " " << c.credits << " ";
+    return str;
+}
 
 /*
 //Your output needs to keep the identical format
