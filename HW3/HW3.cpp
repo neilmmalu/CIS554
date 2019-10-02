@@ -20,6 +20,7 @@ public:
     course(string n, int s, int c) { name = n; section = s; credits = c; }
     //Add additional needed member functions and implement them.
     //You also need to implement some needed functions for overloading operator<< .
+	friend ostream& operator<<(ostream& str, const course& c);
 };
 //Implement the following functions
 
@@ -98,10 +99,9 @@ void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, c
     auto student = DB[id];
     //if semester does not exist, create semester
     if(student.find(semester) == student.end()){
-        list<course*>* l;
-        l->push_back(&c);
-        student[semester] = l;
-        cout << l;
+        student[semester] = new list<course*> ();
+		student[semester]->push_back(&c);
+		cout << student[semester];
     }
     //if semester exists 
     else{
@@ -124,25 +124,20 @@ void print_student_all_courses(map<int, map<int, list<course*>* >>& DB, int id) 
 }
 
 void print_DB(map<int, map<int, list<course*>* >>& DB) {
-    // cout << DB;
+    //cout << DB;
 }
 //Some additional functions for overloading operator<<
 
-// ostream& operator<<(ostream& str, const map<int, map<int, list<course*>* >>& DB) {
-//     for (auto i : DB) { 
-//         str <<  "student id = " << i.first << endl;
-//         for(auto j: i.second){
-//             str << "semester = " << j.first << endl;
-//         }
-//     }
-//     return str;
-// }
-
-template <class T> ostream& operator<<(ostream& str, const map<int, T> &M){
-    
-}
 
 template <class T> ostream& operator<<(ostream& str, const map<int, T*> &M){
+	cout << "LOL" << endl;
+	for (auto i : M) {
+		str << i.second;
+	}
+}
+
+//DB
+template <class T> ostream& operator<<(ostream& str, const map<int, T> &M){
     for (auto i : M) { 
         str <<  "student id = " << i.first << endl;
         for(auto j: i.second){
@@ -159,10 +154,11 @@ template <class T> ostream& operator<<(ostream& str, const list<T *> &L){
     return str;
 }
 
-ostream& operator<<(ostream& str, const course &c){
-    str << c.name << " " << c.section << " " << c.credits << " ";
-    return str;
+ostream& operator<<(ostream& str, const course& C) {
+	str << C.name << " " << C.section << " " << C.credits << " ";
+	return str;
 }
+
 
 /*
 //Your output needs to keep the identical format
