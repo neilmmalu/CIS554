@@ -20,7 +20,13 @@ public:
     course(string n, int s, int c) { name = n; section = s; credits = c; }
     //Add additional needed member functions and implement them.
     //You also need to implement some needed functions for overloading operator<< .
-	friend ostream& operator<<(ostream& str, const course& c);
+	friend ostream& operator<<(ostream& str, const course& C);
+    friend ostream& operator<<(ostream& str, const list<course *> &L);
+    friend ostream& operator<<(ostream& str, const map<int, list<course*>*> &M);
+    friend ostream& operator<<(ostream& str, const map<int, map<int, list<course*>*>> &DB);
+
+    bool operator<(course c) { return (name < c.name); }
+    bool operator==(course c) { return (name == c.name); }
 };
 //Implement the following functions
 
@@ -50,9 +56,9 @@ int main() {
     add_course(DB, 20171, 11111, C2);
     print_student_semester_courses(DB, 20171, 11111);
 
-    /*drop_course(DB, 20171, 11111, C1);
+    drop_course(DB, 20171, 11111, C1);
     print_student_semester_courses(DB, 20171, 11111);
-
+    /*
     add_course(DB, 20172, 11111, C2);
     add_course(DB, 20172, 11111, C4);
     add_course(DB, 20172, 11111, C3);
@@ -95,49 +101,70 @@ void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
 void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, course c) {
     //if student does not exist
     if(DB.find(id) == DB.end()) return;
-
-    auto student = DB[id];
     //if semester does not exist, create semester
-    if(student.find(semester) == student.end()){
-        student[semester] = new list<course*> ();
-		student[semester]->push_back(&c);
-		cout << student[semester];
+    if(DB[id].find(semester) == DB[id].end()){
+        DB[id][semester] = new list<course*>;
+        DB[id][semester]->push_back(&c);
     }
-    //if semester exists 
+    //if semester exists, insert course at the sorted positon in the list
     else{
-        auto sem = student[semester];
-        for(auto it = sem->begin(); it != sem->end(); it++){
-            if(&c == *it) return;
-        }
+        DB[id][semester]->push_back(&c);
+        // auto i = DB[id][semester]->begin();
+        // while(i != DB[id][semester]->end()){
+        //     //return if the course already exists
+        //     if(**i == c) return;
+
+        //     if(c < **i){
+        //         DB[id][semester]->insert(i, &c);
+        //     }
+        //     i++;
+        // }
     }
+
+    
 }
 
 void drop_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, course c) {
+    if(DB.find(id) == DB.end()) return;
 
+    if(DB[id].find(semester) == DB[id].end()) return;
+
+    auto i = DB[id][semester]->begin();
+    while(i != DB[id][semester]->end()){
+        if(**i == c) {
+            DB[id][semester]->erase(i); 
+            return;
+        }
+        i++;
+    }
 }
 
 void print_student_semester_courses(map<int, map<int, list<course*>* >>& DB, int semester, int id) {
-    cout << DB[id][semester] << endl;
+    cout << "student id = " << id << endl;
+    cout << "semester = " << semester << endl;
+    cout << *DB[id][semester] << endl;
 }
 void print_student_all_courses(map<int, map<int, list<course*>* >>& DB, int id) {
-
+    cout << "student id = " << id << endl;
+    cout << DB[id] << endl;
 }
 
 void print_DB(map<int, map<int, list<course*>* >>& DB) {
-    //cout << DB;
+    cout << DB;
 }
 //Some additional functions for overloading operator<<
 
-
-template <class T> ostream& operator<<(ostream& str, const map<int, T*> &M){
-	cout << "LOL" << endl;
+//pointer to the list
+ostream& operator<<(ostream& str, const map<int, list<course*>*> &M){
 	for (auto i : M) {
-		str << i.second;
+        str << "semester = " << i.first << endl;
+		str << *i.second;
 	}
+    return str;
 }
 
 //DB
-template <class T> ostream& operator<<(ostream& str, const map<int, T> &M){
+ostream& operator<<(ostream& str, const map<int, map<int, list<course*>*>> &M){
     for (auto i : M) { 
         str <<  "student id = " << i.first << endl;
         for(auto j: i.second){
@@ -147,8 +174,8 @@ template <class T> ostream& operator<<(ostream& str, const map<int, T> &M){
     return str;
 }
 
-template <class T> ostream& operator<<(ostream& str, const list<T *> &L){
-    for(auto c: L){
+ostream& operator<<(ostream& str, const list<course *> &L){
+    for(auto c : L){
         str << *c;
     }
     return str;
