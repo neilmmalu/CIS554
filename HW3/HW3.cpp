@@ -57,7 +57,7 @@ int main() {
     print_student_semester_courses(DB, 20171, 11111);
 
     drop_course(DB, 20171, 11111, C1);
-    print_student_semester_courses(DB, 20171, 11111);
+    // print_student_semester_courses(DB, 20171, 11111);
     /*
     add_course(DB, 20172, 11111, C2);
     add_course(DB, 20172, 11111, C4);
@@ -80,7 +80,7 @@ int main() {
     print_student_all_courses(DB, 11112);
     print_DB(DB);
     remove_student(DB, 11111);*/
-    print_DB(DB);
+    // print_DB(DB);
     getchar();
     getchar();
     return 0;
@@ -94,6 +94,7 @@ void add_student(map<int, map<int, list<course*>* >>& DB, int id) {
 }
 
 void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
+    if(DB.find(id) == DB.end()) return;
 
 }
 
@@ -108,19 +109,12 @@ void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, c
     }
     //if semester exists, insert course at the sorted positon in the list
     else{
-        DB[id][semester]->push_back(&c);
-        // auto i = DB[id][semester]->begin();
-        // while(i != DB[id][semester]->end()){
-        //     //return if the course already exists
-        //     if(**i == c) return;
+        // DB[id][semester]->push_back(&c);
+        auto it = DB[id][semester]->begin();
+        while(it != DB[id][semester]->end() && **it < c) it++;
 
-        //     if(c < **i){
-        //         DB[id][semester]->insert(i, &c);
-        //     }
-        //     i++;
-        // }
+        DB[id][semester]->insert(it, &c);
     }
-
     
 }
 
