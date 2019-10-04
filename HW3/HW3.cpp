@@ -56,15 +56,15 @@ int main() {
     add_course(DB, 20171, 11111, C2);
     print_student_semester_courses(DB, 20171, 11111);
 
-    drop_course(DB, 20171, 11111, C1);
-    // print_student_semester_courses(DB, 20171, 11111);
-    /*
+    drop_course(DB, 20171, 11111, C3);
+    print_student_semester_courses(DB, 20171, 11111);
+    
     add_course(DB, 20172, 11111, C2);
     add_course(DB, 20172, 11111, C4);
     add_course(DB, 20172, 11111, C3);
     add_course(DB, 20172, 11111, C1);
     print_student_all_courses(DB, 11111);
-
+    
     add_student(DB, 11112);
     add_course(DB, 20171, 11112, C2);
     add_course(DB, 20171, 11112, C4);
@@ -78,8 +78,8 @@ int main() {
     add_course(DB, 20172, 11112, C1);
     print_student_semester_courses(DB, 20172, 11112);
     print_student_all_courses(DB, 11112);
-    print_DB(DB);
-    remove_student(DB, 11111);*/
+    // print_DB(DB);
+    remove_student(DB, 11111);
     // print_DB(DB);
     getchar();
     getchar();
@@ -95,6 +95,21 @@ void add_student(map<int, map<int, list<course*>* >>& DB, int id) {
 
 void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
     if(DB.find(id) == DB.end()) return;
+
+    auto it1 = DB.find(id);
+    
+    auto it2 = DB[id].begin();
+    while(it2 != DB[id].end()){
+        for(auto x : DB[id]){
+            for(auto y : *x.second){
+                delete y;
+            }
+        }
+        DB[id].erase(it2);
+        it2++;
+    }
+
+    DB.erase(it1);
 
 }
 
@@ -115,7 +130,6 @@ void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, c
 
         DB[id][semester]->insert(it, &c);
     }
-    
 }
 
 void drop_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, course c) {
@@ -172,6 +186,7 @@ ostream& operator<<(ostream& str, const list<course *> &L){
     for(auto c : L){
         str << *c;
     }
+    str << endl;
     return str;
 }
 
