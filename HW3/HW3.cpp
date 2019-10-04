@@ -56,15 +56,15 @@ int main() {
     add_course(DB, 20171, 11111, C2);
     print_student_semester_courses(DB, 20171, 11111);
 
-    drop_course(DB, 20171, 11111, C3);
+    drop_course(DB, 20171, 11111, C1);
     print_student_semester_courses(DB, 20171, 11111);
-    
+
     add_course(DB, 20172, 11111, C2);
     add_course(DB, 20172, 11111, C4);
     add_course(DB, 20172, 11111, C3);
     add_course(DB, 20172, 11111, C1);
     print_student_all_courses(DB, 11111);
-    
+
     add_student(DB, 11112);
     add_course(DB, 20171, 11112, C2);
     add_course(DB, 20171, 11112, C4);
@@ -78,9 +78,9 @@ int main() {
     add_course(DB, 20172, 11112, C1);
     print_student_semester_courses(DB, 20172, 11112);
     print_student_all_courses(DB, 11112);
-    // print_DB(DB);
+    print_DB(DB);
     remove_student(DB, 11111);
-    // print_DB(DB);
+    print_DB(DB);
     getchar();
     getchar();
     return 0;
@@ -94,18 +94,25 @@ void add_student(map<int, map<int, list<course*>* >>& DB, int id) {
 }
 
 void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
+    //If student does not exist
     if(DB.find(id) == DB.end()) return;
 
+    //delete the outer map last
     auto it1 = DB.find(id);
     
     auto it2 = DB[id].begin();
+    //Inner map
     while(it2 != DB[id].end()){
+
         for(auto x : DB[id]){
-            for(auto y : *x.second){
-                delete y;
+            //it3 is a list iterator
+            auto it3 = x.second->begin();
+            while(it3 != x.second->end()){
+                x.second->erase(it3);
+                it3++;
             }
         }
-        DB[id].erase(it2);
+        // DB[id].erase(it2); //seg faulting. Mem leak here?
         it2++;
     }
 
@@ -117,14 +124,15 @@ void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
 void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, course c) {
     //if student does not exist
     if(DB.find(id) == DB.end()) return;
+
     //if semester does not exist, create semester
     if(DB[id].find(semester) == DB[id].end()){
         DB[id][semester] = new list<course*>;
         DB[id][semester]->push_back(&c);
     }
+
     //if semester exists, insert course at the sorted positon in the list
     else{
-        // DB[id][semester]->push_back(&c);
         auto it = DB[id][semester]->begin();
         while(it != DB[id][semester]->end() && **it < c) it++;
 
@@ -133,12 +141,15 @@ void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, c
 }
 
 void drop_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, course c) {
+    //If course does not exist
     if(DB.find(id) == DB.end()) return;
 
+    //If semester does not exist
     if(DB[id].find(semester) == DB[id].end()) return;
 
     auto i = DB[id][semester]->begin();
     while(i != DB[id][semester]->end()){
+        //compare the courses. == has been overloaded in class
         if(**i == c) {
             DB[id][semester]->erase(i); 
             return;
@@ -160,6 +171,7 @@ void print_student_all_courses(map<int, map<int, list<course*>* >>& DB, int id) 
 void print_DB(map<int, map<int, list<course*>* >>& DB) {
     cout << DB;
 }
+
 //Some additional functions for overloading operator<<
 
 //pointer to the list
@@ -172,19 +184,21 @@ ostream& operator<<(ostream& str, const map<int, list<course*>*> &M){
 }
 
 //DB
-ostream& operator<<(ostream& str, const map<int, map<int, list<course*>*>> &M){
-    for (auto i : M) { 
-        str <<  "student id = " << i.first << endl;
-        for(auto j: i.second){
+ostream& operator<<(ostream& str, const map<int, map<int, list<course*>*>> &DB){
+    for (auto i : DB) { 
+        str << "student id = " << i.first << endl;
+        for(auto j : i.second){
             str << "semester = " << j.first << endl;
+            str << *j.second;
         }
     }
+    str << endl;
     return str;
 }
 
 ostream& operator<<(ostream& str, const list<course *> &L){
     for(auto c : L){
-        str << *c;
+        str << *c << " ";
     }
     str << endl;
     return str;
