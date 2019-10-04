@@ -108,16 +108,21 @@ void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
             //it3 is a list iterator
             auto it3 = x.second->begin();
             while(it3 != x.second->end()){
+				//First delete the pointer pointing to the course
+				delete *it3;
+				//remove the pointer to the list
                 x.second->erase(it3);
+				//set the list iterator back to begin
                 it3 = x.second->begin();
             }
         }
-        // DB[id].erase(it2); //seg faulting. Mem leak here?
-        it2++;
+		//Delete x => each semester for the student
+        DB[id].erase(it2);
+		//Set the iterator back to begin
+        it2 = DB[id].begin();
     }
-
+	//Delete the id from the database at the end
     DB.erase(it1);
-
 }
 
 
@@ -125,7 +130,9 @@ void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, c
     //if student does not exist
     if(DB.find(id) == DB.end()) return;
 
+	//create a new course object so it does not get destroyed by the destructor
     course* x = new course(c.name, c.section, c.credits);
+
     //if semester does not exist, create semester
     if(DB[id].find(semester) == DB[id].end()){
         DB[id][semester] = new list<course*>();
@@ -135,6 +142,7 @@ void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, c
     //if semester exists, insert course at the sorted positon in the list
     else{
         auto it = DB[id][semester]->begin();
+		//Find the position where the new course should be inserted
         while(it != DB[id][semester]->end() && **it < *x) it++;
 
         DB[id][semester]->insert(it, x);
@@ -152,6 +160,9 @@ void drop_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, 
     while(i != DB[id][semester]->end()){
         //compare the courses. == has been overloaded in class
         if(**i == c) {
+			//First delete the pointer pointing to the course object
+			delete *i;
+			//Then remove the pointer from the list
             DB[id][semester]->erase(i); 
             return;
         }
