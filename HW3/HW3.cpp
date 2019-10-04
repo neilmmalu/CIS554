@@ -109,7 +109,7 @@ void remove_student(map<int, map<int, list<course*>* >>& DB, int id) {
             auto it3 = x.second->begin();
             while(it3 != x.second->end()){
                 x.second->erase(it3);
-                it3++;
+                it3 = x.second->begin();
             }
         }
         // DB[id].erase(it2); //seg faulting. Mem leak here?
@@ -125,18 +125,19 @@ void add_course(map<int, map<int, list<course*>* >>& DB, int semester, int id, c
     //if student does not exist
     if(DB.find(id) == DB.end()) return;
 
+    course* x = new course(c.name, c.section, c.credits);
     //if semester does not exist, create semester
     if(DB[id].find(semester) == DB[id].end()){
-        DB[id][semester] = new list<course*>;
-        DB[id][semester]->push_back(&c);
+        DB[id][semester] = new list<course*>();
+        DB[id][semester]->push_back(x);
     }
 
     //if semester exists, insert course at the sorted positon in the list
     else{
         auto it = DB[id][semester]->begin();
-        while(it != DB[id][semester]->end() && **it < c) it++;
+        while(it != DB[id][semester]->end() && **it < *x) it++;
 
-        DB[id][semester]->insert(it, &c);
+        DB[id][semester]->insert(it, x);
     }
 }
 
