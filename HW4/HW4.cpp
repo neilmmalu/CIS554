@@ -71,6 +71,7 @@ public:
     item<X> *next;
     item<X> *previous;
     item<X>(X d) { data = d; next = nullptr; previous = nullptr; }
+    // bool operator==(const item<X> &I){ return (I.data == data) && (I.next == next) && (I.previous == previous); }
 };
 
 template <class X>
@@ -113,20 +114,22 @@ public:
 *BAG MEMBER FUNCTIONS
 *
 */
-template<class X> void bag<X>::push_front(X d){
-    d->previous = nullptr;
-    d->next = first;
-	first->previous = d;
-    first = d;
+template<class X> void bag<X>::push_back(X d) {
+    item<X> newItem = new item<X>(d);
+    newItem->previous = last;
+    newItem->next = nullptr;
+    last->next = newItem;
+    last = newItem;
     num_items++;
 }
 
-template<class X> void bag<X>::push_back(X d) {
-	d->previous = last;
-	d->next = nullptr;
-	last->next = d;
-	last = d;
-	num_items++;
+template<class X> void bag<X>::push_front(X d){
+    item<X> newItem = new item<X>(d);
+    newItem->previous = nullptr;
+    newItem->next = first;
+	first->previous = newItem;
+    first = newItem;
+    num_items++;
 }
 
 template<class X> void bag<X>::pop_back() {
@@ -168,8 +171,80 @@ template<class X> X bag<X>::back() {
 	return last->data;
 }
 
+template<class X> void bag<X>::clear(){
+    if (num_items == 0) return;
+    item<X>* temp = first;
+    while(temp){
+        first = temp->next;
+        temp->next = nullptr;
+        temp->previous = nullptr;
+        delete temp;
+        if(first) first->previous = nullptr;
+        temp = first;
+    }
+    num_items = 0;
+}
 
+template<class X> item<X>* bag<X>::find(X d){
+    if(num_items == 0) return nullptr;
 
+    item<X>* temp = first;
+    while(temp){
+        if(temp->data == d) return temp;
+        temp = temp->next;
+    }
+    return nullptr;
+}
+
+template<class X> void bag<X>::erase(int index){
+    if(index == 0) { pop_front(); return; }
+    if(index == num_items - 1) { pop_back(); return; }
+    if(index < 0 || index >= num_items) return;
+
+    item<X>* temp = first;
+
+    while(index){
+        temp = temp->next;
+        index--;
+    }
+
+    if(temp){
+        temp->previous->next = temp->next;
+        temp->next->previous = temp->previous;
+        temp->previous = nullptr;
+        temp->next = nullptr;
+        delete temp;
+        num_items--;
+    }
+}
+
+template<class X> void bag<X>::erase(item<X>* p){
+    if(!p) return;
+    if(p == first) { pop_front(); return; }
+    if(p == last) { pop_back(); return; }
+
+    p->previous->next = p->next;
+    p->next->previous = p->previous;
+    p->previous = nullptr;
+    p->next = nullptr;
+    delete p;
+    num_items--;
+}
+
+template<class X> item<X>* bag<X>::insert(item<X>* p, X d){
+
+    if(p == first){ push_front(d); return first; }
+
+    if(!p) { push_back(d); return last; }
+
+    item<X> newItem = new item<X>(d);
+    newItem->next = p;
+    p->previous->next = newItem;
+    newItem->previous = p->previous;
+    p->previous = newItem;
+    num_items++;
+    return &newItem;
+}
 
 
 /*
