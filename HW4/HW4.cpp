@@ -43,6 +43,25 @@ public:
 
 };
 
+/*
+*
+*LINKEDLIST MEMBER FUNCTIONS
+*
+*/
+template<class T> void linked_list<T>::push_front(T t) {
+	t->previous = nullptr;
+	t->next = head;
+	head->previous = t;
+	head = t;
+}
+
+template<class T> void linked_list<T>::push_back(T t) {
+	t->next = nullptr;
+	t->previous = tail;
+	tail->next = t;
+	tail = t;
+}
+
 
 
 template <class X>
@@ -126,6 +145,27 @@ template<class X> void bag<X>::pop_front() {
 	temp->next = nullptr;
 	delete temp;
 	num_items--;
+}
+
+template<class X> X& bag<X>::operator[](int i) {
+	if (i < 0 || i >= num_items) return nullptr;
+
+	item<X>* temp = first;
+	while (i) temp = temp->next;
+
+	return temp;
+}
+
+template<class X> X bag<X>::front() {
+	if (num_items == 0) return nullptr;
+
+	return first->data;
+}
+
+template<class X> X bag<X>::back() {
+	if (num_items == 0) return nullptr;
+
+	return last->data;
 }
 
 
