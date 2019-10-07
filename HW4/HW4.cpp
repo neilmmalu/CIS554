@@ -86,18 +86,18 @@ public:
     void pop_back(); //delete the last item in the bag
     void pop_front(); //delete the first item in the bag
     X &operator[](int i); //Access bag item with index. 
-    X front() {  //it returns the data of the first item in the bag.
+    X front();   //it returns the data of the first item in the bag.
                  //if (num_items == 0) do nothing;
                  //else return first->data;
-    }
-    X back() { //it returns the data of the last item in the bag
+    
+    X back();  //it returns the data of the last item in the bag
                /*
                if (num_items == 0) do nothing;
                else return last->data;
                */
 
         
-    }
+    
     void clear(); //Delete all items in the bag
     item<X> * find(X d); //return nullptr if no match for find or if the bag is empty.
                          //else, return the position of the matched item
