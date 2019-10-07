@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string>
 #include <list>
+#include <vector>
 using namespace std;
 
 template <class T> class ThreeD {
@@ -87,13 +88,57 @@ public:
     item<X> * insert(item<X> *p, X d); //insert data d to the position before p and return the position of the inserted item
 };
 
+
+/*
+*
+*BAG MEMBER FUNCTIONS
+*
+*/
 template<class X> void bag<X>::push_front(X d){
     d->previous = nullptr;
     d->next = first;
+	first->previous = d;
     first = d;
     num_items++;
 }
 
+template<class X> void bag<X>::push_back(X d) {
+	d->previous = last;
+	d->next = nullptr;
+	last->next = d;
+	last = d;
+	num_items++;
+}
+
+template<class X> void bag<X>::pop_back() {
+	item<X>* temp = last;
+	last = last->previous;
+	last->next = nullptr;
+	temp->previous = nullptr;
+	delete temp;
+	num_items--;
+}
+
+template<class X> void bag<X>::pop_front() {
+	item<X>* temp = first;
+	first = first->next;
+	first->previous = nullptr;
+	temp->next = nullptr;
+	delete temp;
+	num_items--;
+}
+
+
+
+
+
+/*
+*
+*OPERATOR OVERLOADS
+*
+*/
+
+//Operator overloading for BAG
 template<class X> ostream& operator<<(ostream& str, const bag<X> &B){
     auto p = B.first;
     while(p){
@@ -101,6 +146,54 @@ template<class X> ostream& operator<<(ostream& str, const bag<X> &B){
         p = p->next;
     }
     return str;
+}
+
+//Operator overloading for ThreeD
+template<class T> ostream& operator<<(ostream& str, const ThreeD<T> &T) {
+	str << "( " << T.ht << ", " << T.wid << ", " << T.dep << " )";
+	return str;
+}
+
+//Operator overloading for LinkedList
+template<class T> ostream& operator<<(ostream& str, const linked_list<T>& L) {
+	node<T>* temp = L.head;
+	if (!temp) return str;
+	while (!temp) {
+		str << temp->value << " ";
+	}
+	return str;
+}
+
+//Operator overloading for VECTOR
+template<class T> ostream& operator<<(ostream& str, const vector<T>& V) {
+	auto it = V.begin();
+	str << "[ ";
+	while (it != V.end()) {
+		str << *it << ", ";
+		it++;
+		if (it == V.end()) {
+			str << *it;
+			break;
+		}
+	}
+	str << "]";
+	return str;
+}
+
+//Operator overloading for LIST
+template<class T> ostream& operator<<(ostream& str, const list<T>& L) {
+	auto it = L.begin();
+	str << "[ ";
+	while (it != L.end()) {
+		str << *it << ", ";
+		it++;
+		if (it == L.end()) {
+			str << *it;
+			break;
+		}
+	}
+	str << "]";
+	return str;
 }
 
 
