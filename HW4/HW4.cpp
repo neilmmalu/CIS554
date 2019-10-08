@@ -49,7 +49,6 @@ public:
 *
 */
 template<class T> void linked_list<T>::push_front(T t) {
-
     if(!head) { insert_empty(t); return; }
 
     node<T> newNode = new node<T>(t);
@@ -60,7 +59,6 @@ template<class T> void linked_list<T>::push_front(T t) {
 }
 
 template<class T> void linked_list<T>::push_back(T t) {
-
     if(!head) { insert_empty(t); return; }
 
     node<T> newNode = new node<T>(t);
@@ -131,7 +129,6 @@ public:
 *
 */
 template<class X> void bag<X>::push_back(X d) {
-
     if(size() == 0) { insert_empty(d); return; }
 
     item<X> newItem = new item<X>(d);
@@ -143,7 +140,6 @@ template<class X> void bag<X>::push_back(X d) {
 }
 
 template<class X> void bag<X>::push_front(X d){
-
     if(size() == 0) { insert_empty(d); return; }
 
     item<X> newItem = new item<X>(d);
@@ -161,7 +157,6 @@ template<class X> void bag<X>::insert_empty(X d){
 }
 
 template<class X> void bag<X>::pop_back() {
-
     if(size() == 0) return;
 
 	item<X>* temp = last;
@@ -173,7 +168,6 @@ template<class X> void bag<X>::pop_back() {
 }
 
 template<class X> void bag<X>::pop_front() {
-
     if(size() == 0) return;
 
 	item<X>* temp = first;
@@ -207,6 +201,7 @@ template<class X> X bag<X>::back() {
 
 template<class X> void bag<X>::clear(){
     if (size() == 0) return;
+    
     item<X>* temp = first;
     while(temp){
         first = temp->next;
