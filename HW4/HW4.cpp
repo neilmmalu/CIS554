@@ -237,13 +237,13 @@ template<class X> item<X>* bag<X>::insert(item<X>* p, X d){
 
     if(!p) { push_back(d); return last; }
 
-    item<X> newItem = new item<X>(d);
+    item<X>* newItem = new item<X>(d);
     newItem->next = p;
     p->previous->next = newItem;
     newItem->previous = p->previous;
     p->previous = newItem;
     num_items++;
-    return &newItem;
+    return newItem;
 }
 
 
