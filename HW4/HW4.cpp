@@ -40,6 +40,7 @@ public:
     linked_list() {  head = tail = nullptr; }
     void push_front(T t);
     void push_back(T t);
+	void insert_empty(T t);
 
 };
 
@@ -128,6 +129,7 @@ public:
 *BAG MEMBER FUNCTIONS
 *
 */
+
 template<class X> void bag<X>::push_back(X d) {
     if(size() == 0) { insert_empty(d); return; }
 
@@ -182,7 +184,10 @@ template<class X> X& bag<X>::operator[](int i) {
 	if (i < 0 || i >= size()) return nullptr;
 
 	item<X>* temp = first;
-	while (i) temp = temp->next;
+	while (i) {
+		temp = temp->next;
+		i--;
+	}
 
 	return &(temp->data);
 }
@@ -261,9 +266,7 @@ template<class X> void bag<X>::erase(item<X>* p){
 }
 
 template<class X> item<X>* bag<X>::insert(item<X>* p, X d){
-
     if(p == first){ push_front(d); return first; }
-
     if(!p) { push_back(d); return last; }
 
     item<X>* newItem = new item<X>(d);
@@ -313,12 +316,9 @@ template<class T> ostream& operator<<(ostream& str, const vector<T>& V) {
 	auto it = V.begin();
 	str << "[ ";
 	while (it != V.end()) {
-		str << *it << ", ";
+		str << *it;
 		it++;
-		if (it == V.end()) {
-			str << *it;
-			break;
-		}
+		if (it != V.end()) str << ", ";
 	}
 	str << "]";
 	return str;
@@ -329,12 +329,9 @@ template<class T> ostream& operator<<(ostream& str, const list<T>& L) {
 	auto it = L.begin();
 	str << "[ ";
 	while (it != L.end()) {
-		str << *it << ", ";
+		str << *it;
 		it++;
-		if (it == L.end()) {
-			str << *it;
-			break;
-		}
+		if (it != L.end()) str << ", ";
 	}
 	str << "]";
 	return str;
