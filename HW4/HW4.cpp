@@ -49,17 +49,30 @@ public:
 *
 */
 template<class T> void linked_list<T>::push_front(T t) {
-	t->previous = nullptr;
-	t->next = head;
-	head->previous = t;
-	head = t;
+
+    if(!head) { insert_empty(t); return; }
+
+    node<T> newNode = new node<T>(t);
+	newNode->previous = nullptr;
+	newNode->next = head;
+	head->previous = newNode;
+	head = newNode;
 }
 
 template<class T> void linked_list<T>::push_back(T t) {
-	t->next = nullptr;
-	t->previous = tail;
-	tail->next = t;
-	tail = t;
+
+    if(!head) { insert_empty(t); return; }
+
+    node<T> newNode = new node<T>(t);
+	newNode->next = nullptr;
+	newNode->previous = tail;
+	tail->next = newNode;
+	tail = newNode;
+}
+
+template<class T> void linked_list<T>::insert_empty(T t){
+    head = new node<T>(t);
+    tail = head;
 }
 
 
