@@ -84,6 +84,9 @@ public:
     bag() { first = nullptr; last = nullptr; num_items = 0; } 
     void push_back(X d);  //insert an item with data d to the back of the bag
     void push_front(X d); //insert an item with data d to the front of the bag
+
+    void insert_empty(X d); //helper function to add to empty bag
+
     void pop_back(); //delete the last item in the bag
     void pop_front(); //delete the first item in the bag
     X &operator[](int i); //Access bag item with index. 
@@ -115,6 +118,9 @@ public:
 *
 */
 template<class X> void bag<X>::push_back(X d) {
+
+    if(size() == 0) { insert_empty(d); return; }
+
     item<X> newItem = new item<X>(d);
     newItem->previous = last;
     newItem->next = nullptr;
@@ -124,6 +130,9 @@ template<class X> void bag<X>::push_back(X d) {
 }
 
 template<class X> void bag<X>::push_front(X d){
+
+    if(size() == 0) { insert_empty(d); return; }
+
     item<X> newItem = new item<X>(d);
     newItem->previous = nullptr;
     newItem->next = first;
@@ -132,7 +141,16 @@ template<class X> void bag<X>::push_front(X d){
     num_items++;
 }
 
+template<class X> void bag<X>::insert_empty(X d){
+    first = new item<X>(d);
+    last = first;
+    num_items++;
+}
+
 template<class X> void bag<X>::pop_back() {
+
+    if(size() == 0) return;
+
 	item<X>* temp = last;
 	last = last->previous;
 	last->next = nullptr;
@@ -142,6 +160,9 @@ template<class X> void bag<X>::pop_back() {
 }
 
 template<class X> void bag<X>::pop_front() {
+
+    if(size() == 0) return;
+
 	item<X>* temp = first;
 	first = first->next;
 	first->previous = nullptr;
@@ -151,28 +172,28 @@ template<class X> void bag<X>::pop_front() {
 }
 
 template<class X> X& bag<X>::operator[](int i) {
-	if (i < 0 || i >= num_items) return nullptr;
+	if (i < 0 || i >= size()) return nullptr;
 
 	item<X>* temp = first;
 	while (i) temp = temp->next;
 
-	return temp;
+	return &(temp->data);
 }
 
 template<class X> X bag<X>::front() {
-	if (num_items == 0) return nullptr;
+	if (size() == 0) return nullptr;
 
 	return first->data;
 }
 
 template<class X> X bag<X>::back() {
-	if (num_items == 0) return nullptr;
+	if (size() == 0) return nullptr;
 
 	return last->data;
 }
 
 template<class X> void bag<X>::clear(){
-    if (num_items == 0) return;
+    if (size() == 0) return;
     item<X>* temp = first;
     while(temp){
         first = temp->next;
@@ -186,7 +207,7 @@ template<class X> void bag<X>::clear(){
 }
 
 template<class X> item<X>* bag<X>::find(X d){
-    if(num_items == 0) return nullptr;
+    if(size() == 0) return nullptr;
 
     item<X>* temp = first;
     while(temp){
@@ -198,8 +219,8 @@ template<class X> item<X>* bag<X>::find(X d){
 
 template<class X> void bag<X>::erase(int index){
     if(index == 0) { pop_front(); return; }
-    if(index == num_items - 1) { pop_back(); return; }
-    if(index < 0 || index >= num_items) return;
+    if(index == size() - 1) { pop_back(); return; }
+    if(index < 0 || index >= size()) return;
 
     item<X>* temp = first;
 
@@ -219,7 +240,7 @@ template<class X> void bag<X>::erase(int index){
 }
 
 template<class X> void bag<X>::erase(item<X>* p){
-    if(!p) return;
+    if(!p || size() == 0) return;
     if(p == first) { pop_front(); return; }
     if(p == last) { pop_back(); return; }
 
