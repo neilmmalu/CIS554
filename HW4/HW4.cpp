@@ -42,7 +42,8 @@ public:
     void push_back(T t);
 	void insert_empty(T t);
     linked_list(const initializer_list<T> &I);
-
+    linked_list(const linked_list<T> &B); //copy constructor
+    linked_list(linked_list<T> &&B); //move constructor
 };
 
 /*
@@ -88,6 +89,20 @@ template<class T> linked_list<T>::linked_list(const initializer_list<T> &I){
     }
 }
 
+//copy constructor
+template<class T> linked_list<T>::linked_list(const linked_list<T> &L){
+    node<T> * temp = L.head;
+    while(temp){
+        push_back(temp->value);
+        temp = temp->next;
+    }
+}
+
+//move constructor
+template<class T> linked_list<T>::linked_list(linked_list<T> &&B){
+    head = B.head;
+    B.head = nullptr;
+}
 
 
 template <class X>
