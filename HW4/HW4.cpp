@@ -129,7 +129,7 @@ public:
         
     
     void clear(); //Delete all items in the bag
-    item<X> * find(X d); //return nullptr if no match for find or if the bag is empty.
+    //item<X> * find(X d); //return nullptr if no match for find or if the bag is empty.
                          //else, return the position of the matched item
 
     void erase(int index);
@@ -196,7 +196,6 @@ template<class X> void bag<X>::pop_front() {
 }
 
 template<class X> X& bag<X>::operator[](int i) {
-	if (i < 0 || i >= size()) return nullptr;
 
 	item<X>* temp = first;
 	while (i) {
@@ -204,19 +203,17 @@ template<class X> X& bag<X>::operator[](int i) {
 		i--;
 	}
 
-	return &(temp->data);
+	return temp->data;
 }
 
 template<class X> X bag<X>::front() {
-	if (size() == 0) return NULL;
-
-	return first->data;
+	if (size() == 0){}
+	else return first->data;
 }
 
 template<class X> X bag<X>::back() {
-	if (size() == 0) return NULL;
-
-	return last->data;
+	if (size() == 0){}
+	else return last->data;
 }
 
 template<class X> void bag<X>::clear(){
@@ -234,6 +231,7 @@ template<class X> void bag<X>::clear(){
     num_items = 0;
 }
 
+/*
 template<class X> item<X>* bag<X>::find(X d){
     if(size() == 0) return nullptr;
 
@@ -243,7 +241,7 @@ template<class X> item<X>* bag<X>::find(X d){
         temp = temp->next;
     }
     return nullptr;
-}
+}*/
 
 template<class X> void bag<X>::erase(int index){
     if(index == 0) { pop_front(); return; }
@@ -299,7 +297,7 @@ template<class X> bag<X>::bag(const initializer_list<X> &I){
     while (it != I.begin() - 1) {
         item<X> * newItem = new item<X>(*it);
         newItem->next = first;
-        if(!first) last = newItem;
+        if(first == nullptr) last = newItem;
         else first->previous = newItem;
         first = newItem;
         it--;
@@ -317,7 +315,7 @@ template<class X> bag<X>::bag(const initializer_list<X> &I){
 template<class X> ostream& operator<<(ostream& str, const bag<X> &B){
     auto p = B.first;
     while(p){
-        str << p << " ";
+        str << p->data << " ";
         p = p->next;
     }
     return str;
@@ -332,9 +330,9 @@ template<class T> ostream& operator<<(ostream& str, const ThreeD<T> &t) {
 //Operator overloading for LinkedList
 template<class T> ostream& operator<<(ostream& str, const linked_list<T>& L) {
 	node<T>* temp = L.head;
-	if (!temp) return str;
-	while (!temp) {
+	while (temp) {
 		str << temp->value << " ";
+		temp = temp->next;
 	}
 	return str;
 }
@@ -442,7 +440,7 @@ int main() {
     cout << BLTD << endl;
 
     item<linked_list<ThreeD<double>>> * p2;
-
+	/*
     p2 = BLTD.find(LTD1);
     BLTD.erase(p2);
     cout << BLTD << endl;
@@ -450,7 +448,7 @@ int main() {
     cout << BLTD << endl;
     BLTD.erase(0);
     cout << BLTD << endl;
-
+	*/
     vector<ThreeD<int>> V1 = { { 1,2,3 },{ 4,5,6 },{ 7,8,9 } };
     cout << V1 << endl;
     bag<bag<int>> V2 = { {1,2,3}, {4,5,6}, {7,8,9} };
@@ -487,8 +485,8 @@ int main() {
     list<linked_list<ThreeD<int>>> V5 = { { { 6,1,1 },{ 2,5,12 } },{ { 9,8,7 },{ 11,10,12 },{ 26,7,5 } },{ { 6,1,1 },{ 2,5,12 } } };
     B16.insert(B16.first, V5);
     cout << B16.front().size() << endl;
-    item<list<linked_list<ThreeD<int>>> > * p20=  B16.find(V4);
-    if (p20 != nullptr) cout << (p20->data).size() << endl;
+    //item<list<linked_list<ThreeD<int>>> > * p20=  B16.find(V4);
+    //if (p20 != nullptr) cout << (p20->data).size() << endl;
     getchar();
     getchar();
     return 0;
