@@ -41,6 +41,7 @@ public:
     void push_front(T t);
     void push_back(T t);
 	void insert_empty(T t);
+    linked_list(const initializer_list<T> &I);
 
 };
 
@@ -72,6 +73,19 @@ template<class T> void linked_list<T>::push_back(T t) {
 template<class T> void linked_list<T>::insert_empty(T t){
     head = new node<T>(t);
     tail = head;
+}
+
+template<class T> linked_list<T>::linked_list(const initializer_list<T> &I){
+    auto it = I.end() - 1; 
+
+    while (it != I.begin() - 1) {
+        Node<T> * p = new Node<T>(*it);
+        p->next = head;
+        if(!head) tail = head;
+        else head->previous = p;
+        head = p;
+        it--;
+    }
 }
 
 
@@ -121,6 +135,7 @@ public:
     void erase(int index);
     void erase(item<X> * p);
     item<X> * insert(item<X> *p, X d); //insert data d to the position before p and return the position of the inserted item
+    bag(const initializer_list<X> &I);
 };
 
 
@@ -276,6 +291,19 @@ template<class X> item<X>* bag<X>::insert(item<X>* p, X d){
     p->previous = newItem;
     num_items++;
     return newItem;
+}
+
+template<class X> bag<X>::bag(const initializer_list<X> &I){
+    auto it = I.end() - 1; 
+
+    while (it != I.begin() - 1) {
+        item<X> * p = new item<T>(*it);
+        p->next = first;
+        if(!first) last = first;
+        else first->previous = p;
+        first = p;
+        it--;
+    }
 }
 
 

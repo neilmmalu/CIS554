@@ -70,7 +70,27 @@ public:
 	The result of remove will be a sorted list.
 	You are not allowed to invoke sort() in HW1 in your implementation of remove.
 	*/
+	DoublyLinkedList(const initializer_list<int>& I);
+
 };
+
+DoublyLinkedList::DoublyLinkedList(const initializer_list<int>& I) {
+	auto it = I.end() - 1; // 
+	//The complete type is:
+	//initializer_list<int>::iterator it = I.end() -1;
+	//Using auto greately simplify the notation
+
+
+	while (it != I.begin() - 1) {
+		Node* p = new Node(*it);  //Remember that the first node
+		//added to the linked list will become the last node of linked list
+		p->next = head;
+		if(!head) tail = head;
+		else head->previous = p;
+		head = p;
+		it--;
+	}
+}
 
 void DoublyLinkedList::sort() {
 	if (!head || !head->next) return;
@@ -493,25 +513,11 @@ void DoublyLinkedList::printBackward() {
 
 int main() {
 	DoublyLinkedList d1, d2;
-	d1.makeRandomList(50, 20);
-	d1.printForward();
-	d1.printBackward();
 
-	d1.sort();
-	d1.printForward();
-	d1.printBackward();
-
-	d2.makeRandomList(50, 20);
-	d1.printForward();
-	d1.printBackward();
-
-	d1.merge(d2);
-	d1.printForward();
-	d1.printBackward();
-
-	d1.remove(13, 3);
-	d1.printForward();
-	d1.printBackward();
+	DoublyLinkedList d{5,5,9,9,1,1,1,1,7,7,7,7};
+	d.printForward();
+	d.remove(1,1);
+	d.printForward();
 	getchar();
 	getchar();
 	return 0;
