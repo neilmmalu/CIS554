@@ -85,7 +85,7 @@ DoublyLinkedList::DoublyLinkedList(const initializer_list<int>& I) {
 		Node* p = new Node(*it);  //Remember that the first node
 		//added to the linked list will become the last node of linked list
 		p->next = head;
-		if(!head) tail = head;
+		if(!head) tail = p;
 		else head->previous = p;
 		head = p;
 		it--;
@@ -515,8 +515,6 @@ int main() {
 	DoublyLinkedList d1, d2;
 
 	DoublyLinkedList d{5,5,9,9,1,1,1,1,7,7,7,7};
-	d.printForward();
-	d.remove(1,1);
 	d.printForward();
 	getchar();
 	getchar();

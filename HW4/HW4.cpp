@@ -53,7 +53,7 @@ public:
 template<class T> void linked_list<T>::push_front(T t) {
     if(!head) { insert_empty(t); return; }
 
-    node<T> newNode = new node<T>(t);
+    node<T>* newNode = new node<T>(t);
 	newNode->previous = nullptr;
 	newNode->next = head;
 	head->previous = newNode;
@@ -63,7 +63,7 @@ template<class T> void linked_list<T>::push_front(T t) {
 template<class T> void linked_list<T>::push_back(T t) {
     if(!head) { insert_empty(t); return; }
 
-    node<T> newNode = new node<T>(t);
+    node<T>* newNode = new node<T>(t);
 	newNode->next = nullptr;
 	newNode->previous = tail;
 	tail->next = newNode;
@@ -79,7 +79,7 @@ template<class T> linked_list<T>::linked_list(const initializer_list<T> &I){
     auto it = I.end() - 1; 
 
     while (it != I.begin() - 1) {
-        Node<T> * p = new Node<T>(*it);
+        node<T> * p = new node<T>(*it);
         p->next = head;
         if(!head) tail = head;
         else head->previous = p;
@@ -148,7 +148,7 @@ public:
 template<class X> void bag<X>::push_back(X d) {
     if(size() == 0) { insert_empty(d); return; }
 
-    item<X> newItem = new item<X>(d);
+    item<X>* newItem = new item<X>(d);
     newItem->previous = last;
     newItem->next = nullptr;
     last->next = newItem;
@@ -159,7 +159,7 @@ template<class X> void bag<X>::push_back(X d) {
 template<class X> void bag<X>::push_front(X d){
     if(size() == 0) { insert_empty(d); return; }
 
-    item<X> newItem = new item<X>(d);
+    item<X>* newItem = new item<X>(d);
     newItem->previous = nullptr;
     newItem->next = first;
 	first->previous = newItem;
@@ -208,13 +208,13 @@ template<class X> X& bag<X>::operator[](int i) {
 }
 
 template<class X> X bag<X>::front() {
-	if (size() == 0) return nullptr;
+	if (size() == 0) return NULL;
 
 	return first->data;
 }
 
 template<class X> X bag<X>::back() {
-	if (size() == 0) return nullptr;
+	if (size() == 0) return NULL;
 
 	return last->data;
 }
@@ -297,11 +297,11 @@ template<class X> bag<X>::bag(const initializer_list<X> &I){
     auto it = I.end() - 1; 
 
     while (it != I.begin() - 1) {
-        item<X> * p = new item<X>(*it);
-        p->next = first;
-        if(!first) last = p;
-        else first->previous = p;
-        first = p;
+        item<X> * newItem = new item<X>(*it);
+        newItem->next = first;
+        if(!first) last = newItem;
+        else first->previous = newItem;
+        first = newItem;
         it--;
     }
 }
@@ -324,8 +324,8 @@ template<class X> ostream& operator<<(ostream& str, const bag<X> &B){
 }
 
 //Operator overloading for ThreeD
-template<class T> ostream& operator<<(ostream& str, const ThreeD<T> &T) {
-	str << "( " << T.ht << ", " << T.wid << ", " << T.dep << " )";
+template<class T> ostream& operator<<(ostream& str, const ThreeD<T> &t) {
+	str << "( " << t.ht << ", " << t.wid << ", " << t.dep << " )";
 	return str;
 }
 
@@ -454,7 +454,7 @@ int main() {
     vector<ThreeD<int>> V1 = { { 1,2,3 },{ 4,5,6 },{ 7,8,9 } };
     cout << V1 << endl;
     bag<bag<int>> V2 = { {1,2,3}, {4,5,6}, {7,8,9} };
-    vector<bag<ThreeD<int>>> V2 = { { { 1,2,3 },{ 4,5,6 },{ 7,8,9 } },{ { 20,30,40 },{ 11,22, 33 } } };
+    //vector<bag<ThreeD<int>>> V2 = { { { 1,2,3 },{ 4,5,6 },{ 7,8,9 } },{ { 20,30,40 },{ 11,22, 33 } } };
     cout << V2 << endl;
 
     list<bag<linked_list<int>>> V3 = { { { 1, 2, 3 },{ 4, 5 } },{ { 6,7 },{ 8, 9, 10 } } };
