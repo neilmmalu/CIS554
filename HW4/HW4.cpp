@@ -44,6 +44,7 @@ public:
     linked_list(const initializer_list<T> &I);
     linked_list(const linked_list<T> &B); //copy constructor
     linked_list(linked_list<T> &&B); //move constructor
+	~linked_list(); //destructor
 };
 
 /*
@@ -77,24 +78,39 @@ template<class T> void linked_list<T>::insert_empty(T t){
 }
 
 template<class T> linked_list<T>::linked_list(const initializer_list<T> &I){
-    auto it = I.end() - 1; 
-
-    while (it != I.begin() - 1) {
-        node<T> * p = new node<T>(*it);
-        p->next = head;
-        if(!head) tail = head;
-        else head->previous = p;
-        head = p;
-        it--;
+    auto it = I.begin(); 
+	head = nullptr;
+    while (it != I.end()) {
+		node<T>* newNode = new node<T>(newNode->value);
+		if (!head) {
+			head = newNode;
+			tail = head;
+		}
+		else {
+			tail->next = newNode;
+			newNode->previous = tail;
+			tail = newNode;
+		}
+        it++;
     }
 }
 
 //copy constructor
 template<class T> linked_list<T>::linked_list(const linked_list<T> &L){
-    node<T> * temp = L.head;
-    while(temp){
-        push_back(temp->value);
-        temp = temp->next;
+	head = nullptr;
+    node<T> * p1 = L.head;
+    while(p1){
+		node<T>* newNode = new node<T>(newNode->value);
+		if (!head) {
+			head = newNode;
+			tail = head;
+		}
+		else {
+			tail->next = newNode;
+			newNode->previous = tail;
+			tail = newNode;
+		}
+        p1 = p1->next;
     }
 }
 
@@ -102,6 +118,15 @@ template<class T> linked_list<T>::linked_list(const linked_list<T> &L){
 template<class T> linked_list<T>::linked_list(linked_list<T> &&B){
     head = B.head;
     B.head = nullptr;
+}
+
+//destructor
+template<class T> linked_list<T>::~linked_list() {
+	while (head) {
+		node<T>* temp = head;
+		head = head->next;
+		delete temp;
+	}
 }
 
 
@@ -151,6 +176,9 @@ public:
     void erase(item<X> * p);
     item<X> * insert(item<X> *p, X d); //insert data d to the position before p and return the position of the inserted item
     bag(const initializer_list<X> &I);
+	bag(const bag<X>& B); //copy constructor
+	bag(bag<X>&& B); //move constructor
+	~bag(); //destructor
 };
 
 
@@ -307,16 +335,59 @@ template<class X> item<X>* bag<X>::insert(item<X>* p, X d){
 }
 
 template<class X> bag<X>::bag(const initializer_list<X> &I){
-    auto it = I.end() - 1; 
+	auto it = I.begin();
+	first = nullptr;
+	while (it != I.end()) {
+		item<X>* newItem = new item<X>(newItem->data);
+		if (!first) {
+			first = newItem;
+			last = first;
+		}
+		else {
+			last->next = newItem;
+			newItem->previous = last;
+			last = newItem;
+		}
+		it++;
+		num_items++;
+	}
+}
 
-    while (it != I.begin() - 1) {
-        item<X> * newItem = new item<X>(*it);
-        newItem->next = first;
-        if(first == nullptr) last = newItem;
-        else first->previous = newItem;
-        first = newItem;
-        it--;
-    }
+//copy constructor
+template<class X> bag<X>::bag(const bag<X>& B) {
+	first = nullptr;
+	num_items = B.num_items;
+	item<T>* p1 = B.first;
+	while (p1) {
+		item<T>* newItem = new item<T>(newItem->data);
+		if (!first) {
+			first = newItem;
+			last = first;
+		}
+		else {
+			last->next = newItem;
+			newItem->previous = last;
+			last = newItem;
+		}
+		p1 = p1->next;
+	}
+}
+
+//move constructor
+template<class X> bag<X>::bag(bag<X>&& B) {
+	num_items = B.num_items;
+	first = B.first;
+	B.first = nullptr;
+}
+
+//destructor
+template<class X> bag<X>::~bag() {
+	while (first) {
+		node<T>* temp = first;
+		first = first->next;
+		delete temp;
+		num_items--;
+	}
 }
 
 
