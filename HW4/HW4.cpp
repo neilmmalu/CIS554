@@ -297,9 +297,9 @@ template<class X> bag<X>::bag(const initializer_list<X> &I){
     auto it = I.end() - 1; 
 
     while (it != I.begin() - 1) {
-        item<X> * p = new item<T>(*it);
+        item<X> * p = new item<X>(*it);
         p->next = first;
-        if(!first) last = first;
+        if(!first) last = p;
         else first->previous = p;
         first = p;
         it--;
