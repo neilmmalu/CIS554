@@ -85,6 +85,7 @@ template<class T> void linked_list<T>::insert_empty(T t){
 template<class T> linked_list<T>::linked_list(const initializer_list<T> &I){
     auto it = I.begin(); 
 	head = nullptr;
+	tail = nullptr;
     while (it != I.end()) {
 		node<T>* newNode = new node<T>(*it);
 		if (!head) {
@@ -103,6 +104,7 @@ template<class T> linked_list<T>::linked_list(const initializer_list<T> &I){
 //copy constructor
 template<class T> linked_list<T>::linked_list(const linked_list<T> &L){
 	head = nullptr;
+	tail = nullptr;
     node<T> * p1 = L.head;
     while(p1){
 		node<T>* newNode = new node<T>(p1->value);
@@ -126,7 +128,8 @@ template<class T> void linked_list<T>::operator=(const linked_list<T> &L) {
 		head = head->next;
 		delete temp;
 	}
-
+	head = nullptr;
+	tail = nullptr;
 	node<T>* p1 = L.head;
 	while (p1) {
 		node<T>* newNode = new node<T>(p1->value);
@@ -161,7 +164,7 @@ template<class T> void linked_list<T>::operator=(linked_list<T>&& L) {
 	}
 
 	head = L.head;
-	tail = l.tail;
+	tail = L.tail;
 	L.head = nullptr;
 	L.tail = nullptr;
 }
@@ -386,6 +389,7 @@ template<class X> item<X>* bag<X>::insert(item<X>* p, X d){
 template<class X> bag<X>::bag(const initializer_list<X> &I){
 	auto it = I.begin();
 	first = nullptr;
+	last = nullptr;
 	while (it != I.end()) {
 		item<X>* newItem = new item<X>(*it);
 		if (!first) {
@@ -405,6 +409,7 @@ template<class X> bag<X>::bag(const initializer_list<X> &I){
 //copy constructor
 template<class X> bag<X>::bag(const bag<X>& B) {
 	first = nullptr;
+	last = nullptr;
 	num_items = B.num_items;
 	item<X>* p1 = B.first;
 	while (p1) {
@@ -429,7 +434,8 @@ template<class X> void bag<X>::operator=(const bag<X>& B) {
 		first = first->next;
 		delete temp;
 	}
-
+	first = nullptr;
+	last = nullptr;
 	num_items = B.num_items;
 	item<X>* p1 = B.first;
 	while (p1) {
