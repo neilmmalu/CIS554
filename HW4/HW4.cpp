@@ -23,6 +23,7 @@ public:
     T getVol(){return ht*wid*dep;}
     //two objects are equal if their getVol() return the same value.
     bool operator==(const ThreeD<T> &t){ return getVol() == t.getVol(); }
+    friend template<class T> ostream& operator<<(ostream& str, const ThreeD<T> &t);
 };
 
 template <class T> class node {
@@ -45,6 +46,7 @@ public:
     linked_list(const linked_list<T> &B); //copy constructor
     linked_list(linked_list<T> &&B); //move constructor
 	~linked_list(); //destructor
+    friend template<class T> ostream& operator<<(ostream& str, const linked_list<T> &L);
 };
 
 /*
@@ -81,7 +83,7 @@ template<class T> linked_list<T>::linked_list(const initializer_list<T> &I){
     auto it = I.begin(); 
 	head = nullptr;
     while (it != I.end()) {
-		node<T>* newNode = new node<T>(newNode->value);
+		node<T>* newNode = new node<T>(*it);
 		if (!head) {
 			head = newNode;
 			tail = head;
@@ -100,7 +102,7 @@ template<class T> linked_list<T>::linked_list(const linked_list<T> &L){
 	head = nullptr;
     node<T> * p1 = L.head;
     while(p1){
-		node<T>* newNode = new node<T>(newNode->value);
+		node<T>* newNode = new node<T>(p1->value);
 		if (!head) {
 			head = newNode;
 			tail = head;
@@ -117,7 +119,9 @@ template<class T> linked_list<T>::linked_list(const linked_list<T> &L){
 //move constructor
 template<class T> linked_list<T>::linked_list(linked_list<T> &&B){
     head = B.head;
+    tail = B.tail;
     B.head = nullptr;
+    B.tail = nullptr;
 }
 
 //destructor
@@ -169,7 +173,7 @@ public:
         
     
     void clear(); //Delete all items in the bag
-    //item<X> * find(X d); //return nullptr if no match for find or if the bag is empty.
+    item<X> * find(X d); //return nullptr if no match for find or if the bag is empty.
                          //else, return the position of the matched item
 
     void erase(int index);
@@ -179,6 +183,7 @@ public:
 	bag(const bag<X>& B); //copy constructor
 	bag(bag<X>&& B); //move constructor
 	~bag(); //destructor
+    friend template<class X> ostream& operator<<(ostream& str, const bag<X> &B);
 };
 
 
@@ -274,7 +279,6 @@ template<class X> void bag<X>::clear(){
     num_items = 0;
 }
 
-/*
 template<class X> item<X>* bag<X>::find(X d){
     if(size() == 0) return nullptr;
 
@@ -284,7 +288,7 @@ template<class X> item<X>* bag<X>::find(X d){
         temp = temp->next;
     }
     return nullptr;
-}*/
+}
 
 template<class X> void bag<X>::erase(int index){
     if(index == 0) { pop_front(); return; }
@@ -357,9 +361,9 @@ template<class X> bag<X>::bag(const initializer_list<X> &I){
 template<class X> bag<X>::bag(const bag<X>& B) {
 	first = nullptr;
 	num_items = B.num_items;
-	item<T>* p1 = B.first;
+	item<X>* p1 = B.first;
 	while (p1) {
-		item<T>* newItem = new item<T>(newItem->data);
+		item<X>* newItem = new item<X>(p1->data);
 		if (!first) {
 			first = newItem;
 			last = first;
@@ -377,13 +381,15 @@ template<class X> bag<X>::bag(const bag<X>& B) {
 template<class X> bag<X>::bag(bag<X>&& B) {
 	num_items = B.num_items;
 	first = B.first;
+    last = B.last;
 	B.first = nullptr;
+    B.last = nullptr;
 }
 
 //destructor
 template<class X> bag<X>::~bag() {
 	while (first) {
-		node<T>* temp = first;
+		item<X>* temp = first;
 		first = first->next;
 		delete temp;
 		num_items--;
@@ -407,6 +413,22 @@ template<class X> ostream& operator<<(ostream& str, const bag<X> &B){
     return str;
 }
 
+template<class X> bool bag<X>::operator==(const bag<X> &B){
+    if(num_items != B.num_items) return false;
+
+    auto p1 = first;
+    auto p2 = B.first;
+    while(p1 && p2){
+        if(p1->data != p2->data) return false;
+        p1 = p1->next;
+        p2 = p2->next;
+    }
+
+    if(p1 || p2) return false;
+
+    return true;
+}
+
 //Operator overloading for ThreeD
 template<class T> ostream& operator<<(ostream& str, const ThreeD<T> &t) {
 	str << "( " << t.ht << ", " << t.wid << ", " << t.dep << " )";
@@ -414,7 +436,7 @@ template<class T> ostream& operator<<(ostream& str, const ThreeD<T> &t) {
 }
 
 //Operator overloading for LinkedList
-template<class T> ostream& operator<<(ostream& str, const linked_list<T>& L) {
+template<class T> ostream& operator<<(ostream& str, const linked_list<T> &L) {
 	node<T>* temp = L.head;
 	while (temp) {
 		str << temp->value << " ";
@@ -423,8 +445,22 @@ template<class T> ostream& operator<<(ostream& str, const linked_list<T>& L) {
 	return str;
 }
 
+template<class T> bool operator==(const linked_list<T> &L){
+    auto p1 = head;
+    auto p2 = B.head;
+    while(p1 && p2){
+        if(p1->value != p2->value) return false;
+        p1 = p1->next;
+        p2 = p2->next;
+    }
+
+    if(p1 || p2) return false;
+
+    return true;
+}
+
 //Operator overloading for VECTOR
-template<class T> ostream& operator<<(ostream& str, const vector<T>& V) {
+template<class T> ostream& operator<<(ostream& str, const vector<T> &V) {
 	auto it = V.begin();
 	str << "[ ";
 	while (it != V.end()) {
@@ -437,7 +473,7 @@ template<class T> ostream& operator<<(ostream& str, const vector<T>& V) {
 }
 
 //Operator overloading for LIST
-template<class T> ostream& operator<<(ostream& str, const list<T>& L) {
+template<class T> ostream& operator<<(ostream& str, const list<T> &L) {
 	auto it = L.begin();
 	str << "[ ";
 	while (it != L.end()) {
