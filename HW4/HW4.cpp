@@ -23,7 +23,7 @@ public:
     T getVol(){return ht*wid*dep;}
     //two objects are equal if their getVol() return the same value.
     bool operator==(const ThreeD<T> &t){ return getVol() == t.getVol(); }
-    friend template<class T> ostream& operator<<(ostream& str, const ThreeD<T> &t);
+    //friend ostream& operator<<(ostream& str, const ThreeD<T> &t);
 };
 
 template <class T> class node {
@@ -43,10 +43,13 @@ public:
     void push_back(T t);
 	void insert_empty(T t);
     linked_list(const initializer_list<T> &I);
-    linked_list(const linked_list<T> &B); //copy constructor
-    linked_list(linked_list<T> &&B); //move constructor
+    linked_list(const linked_list<T> &L); //copy constructor
+	void operator=(const linked_list<T>& L); //L-value operator=
+    linked_list(linked_list<T> &&L); //move constructor
+	void operator=(linked_list<T>&& L); //R-value operator=
 	~linked_list(); //destructor
-    friend template<class T> ostream& operator<<(ostream& str, const linked_list<T> &L);
+    //friend ostream& operator<<(ostream& str, const linked_list<T> &L);
+	bool operator==(const linked_list<T>& L);
 };
 
 /*
@@ -116,12 +119,51 @@ template<class T> linked_list<T>::linked_list(const linked_list<T> &L){
     }
 }
 
+//L-value operator=
+template<class T> void linked_list<T>::operator=(const linked_list<T> &L) {
+	while (head) {
+		node<T>* temp = head;
+		head = head->next;
+		delete temp;
+	}
+
+	node<T>* p1 = L.head;
+	while (p1) {
+		node<T>* newNode = new node<T>(p1->value);
+		if (!head) {
+			head = newNode;
+			tail = head;
+		}
+		else {
+			tail->next = newNode;
+			newNode->previous = tail;
+			tail = newNode;
+		}
+		p1 = p1->next;
+	}
+
+}
+
 //move constructor
-template<class T> linked_list<T>::linked_list(linked_list<T> &&B){
-    head = B.head;
-    tail = B.tail;
-    B.head = nullptr;
-    B.tail = nullptr;
+template<class T> linked_list<T>::linked_list(linked_list<T> &&L){
+    head = L.head;
+    tail = L.tail;
+    L.head = nullptr;
+    L.tail = nullptr;
+}
+
+//R-value operator=
+template<class T> void linked_list<T>::operator=(linked_list<T>&& L) {
+	while (head) {
+		node<T>* temp = head;
+		head = head->next;
+		delete temp;
+	}
+
+	head = L.head;
+	tail = l.tail;
+	L.head = nullptr;
+	L.tail = nullptr;
 }
 
 //destructor
@@ -181,9 +223,12 @@ public:
     item<X> * insert(item<X> *p, X d); //insert data d to the position before p and return the position of the inserted item
     bag(const initializer_list<X> &I);
 	bag(const bag<X>& B); //copy constructor
+	void operator=(const bag<X>& B); //L-value operator=
 	bag(bag<X>&& B); //move constructor
+	void operator=(bag<X>&& B); //R-value operator=
 	~bag(); //destructor
-    friend template<class X> ostream& operator<<(ostream& str, const bag<X> &B);
+    //friend ostream& operator<<(ostream& str, const bag<X> &B);
+	bool operator==(const bag<X>& B);
 };
 
 
@@ -342,7 +387,7 @@ template<class X> bag<X>::bag(const initializer_list<X> &I){
 	auto it = I.begin();
 	first = nullptr;
 	while (it != I.end()) {
-		item<X>* newItem = new item<X>(newItem->data);
+		item<X>* newItem = new item<X>(*it);
 		if (!first) {
 			first = newItem;
 			last = first;
@@ -377,6 +422,31 @@ template<class X> bag<X>::bag(const bag<X>& B) {
 	}
 }
 
+//L-value operator
+template<class X> void bag<X>::operator=(const bag<X>& B) {
+	while (first) {
+		item<X>* temp = first;
+		first = first->next;
+		delete temp;
+	}
+
+	num_items = B.num_items;
+	item<X>* p1 = B.first;
+	while (p1) {
+		item<X>* newItem = new item<X>(p1->data);
+		if (!first) {
+			first = newItem;
+			last = first;
+		}
+		else {
+			last->next = newItem;
+			newItem->previous = last;
+			last = newItem;
+		}
+		p1 = p1->next;
+	}
+}
+
 //move constructor
 template<class X> bag<X>::bag(bag<X>&& B) {
 	num_items = B.num_items;
@@ -384,6 +454,20 @@ template<class X> bag<X>::bag(bag<X>&& B) {
     last = B.last;
 	B.first = nullptr;
     B.last = nullptr;
+}
+
+//R-value operator=
+template<class X> void bag<X>::operator=(bag<X>&& B) {
+	while (first) {
+		item<X>* temp = first;
+		first = first->next;
+		delete temp;
+	}
+	num_items = B.num_items;
+	first = B.first;
+	last = B.last;
+	B.first = nullptr;
+	B.last = nullptr;
 }
 
 //destructor
@@ -445,13 +529,15 @@ template<class T> ostream& operator<<(ostream& str, const linked_list<T> &L) {
 	return str;
 }
 
-template<class T> bool operator==(const linked_list<T> &L){
+template<class T> bool linked_list<T>::operator==(const linked_list<T> &L){
     auto p1 = head;
-    auto p2 = B.head;
+    auto p2 = L.head;
     while(p1 && p2){
-        if(p1->value != p2->value) return false;
-        p1 = p1->next;
-        p2 = p2->next;
+		if (p1->value == p2->value) {
+			p1 = p1->next;
+			p2 = p2->next;
+		}
+		else return false;
     }
 
     if(p1 || p2) return false;
@@ -562,7 +648,7 @@ int main() {
     cout << BLTD << endl;
 
     item<linked_list<ThreeD<double>>> * p2;
-	/*
+	
     p2 = BLTD.find(LTD1);
     BLTD.erase(p2);
     cout << BLTD << endl;
@@ -570,7 +656,7 @@ int main() {
     cout << BLTD << endl;
     BLTD.erase(0);
     cout << BLTD << endl;
-	*/
+	
     vector<ThreeD<int>> V1 = { { 1,2,3 },{ 4,5,6 },{ 7,8,9 } };
     cout << V1 << endl;
     bag<bag<int>> V2 = { {1,2,3}, {4,5,6}, {7,8,9} };
@@ -607,8 +693,8 @@ int main() {
     list<linked_list<ThreeD<int>>> V5 = { { { 6,1,1 },{ 2,5,12 } },{ { 9,8,7 },{ 11,10,12 },{ 26,7,5 } },{ { 6,1,1 },{ 2,5,12 } } };
     B16.insert(B16.first, V5);
     cout << B16.front().size() << endl;
-    //item<list<linked_list<ThreeD<int>>> > * p20=  B16.find(V4);
-    //if (p20 != nullptr) cout << (p20->data).size() << endl;
+    item<list<linked_list<ThreeD<int>>> > * p20=  B16.find(V4);
+    if (p20 != nullptr) cout << (p20->data).size() << endl;
     getchar();
     getchar();
     return 0;
