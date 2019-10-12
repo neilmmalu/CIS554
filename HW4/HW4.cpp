@@ -20,10 +20,9 @@ public:
     ThreeD() { ht = wid = dep = 0; }
     ThreeD(T i) { ht = wid = dep = i; }
     ThreeD(T a, T b, T c) { ht = a; wid = b; dep = c; }
-    T getVol(){return ht*wid*dep;}
+    T getVol() const {return ht*wid*dep;}
     //two objects are equal if their getVol() return the same value.
-    bool operator==(const ThreeD<T> &t){ return getVol() == t.getVol(); }
-    //friend ostream& operator<<(ostream& str, const ThreeD<T> &t);
+    bool operator==(const ThreeD<T> &t) const { return (getVol() == t.getVol()); }
 };
 
 template <class T> class node {
@@ -48,8 +47,7 @@ public:
     linked_list(linked_list<T> &&L); //move constructor
 	void operator=(linked_list<T>&& L); //R-value operator=
 	~linked_list(); //destructor
-    //friend ostream& operator<<(ostream& str, const linked_list<T> &L);
-	bool operator==(const linked_list<T>& L);
+	bool operator==(const linked_list<T>& L) const;
 };
 
 /*
@@ -186,7 +184,6 @@ public:
     item<X> *next;
     item<X> *previous;
     item<X>(X d) { data = d; next = nullptr; previous = nullptr; }
-    // bool operator==(const item<X> &I){ return (I.data == data) && (I.next == next) && (I.previous == previous); }
 };
 
 template <class X>
@@ -230,8 +227,7 @@ public:
 	bag(bag<X>&& B); //move constructor
 	void operator=(bag<X>&& B); //R-value operator=
 	~bag(); //destructor
-    //friend ostream& operator<<(ostream& str, const bag<X> &B);
-	bool operator==(const bag<X>& B);
+	bool operator==(const bag<X>& B) const;
 };
 
 
@@ -329,7 +325,6 @@ template<class X> void bag<X>::clear(){
 
 template<class X> item<X>* bag<X>::find(X d){
     if(size() == 0) return nullptr;
-
     item<X>* temp = first;
     while(temp){
         if(temp->data == d) return temp;
@@ -340,7 +335,7 @@ template<class X> item<X>* bag<X>::find(X d){
 
 template<class X> void bag<X>::erase(int index){
     if(index == 0) { pop_front(); return; }
-    if(index == size() - 1) { pop_back(); return; }
+	if (index == size() - 1) { pop_back(); return; }
     if(index < 0 || index >= size()) return;
 
     item<X>* temp = first;
@@ -390,6 +385,7 @@ template<class X> bag<X>::bag(const initializer_list<X> &I){
 	auto it = I.begin();
 	first = nullptr;
 	last = nullptr;
+	num_items = 0;
 	while (it != I.end()) {
 		item<X>* newItem = new item<X>(*it);
 		if (!first) {
@@ -482,8 +478,8 @@ template<class X> bag<X>::~bag() {
 		item<X>* temp = first;
 		first = first->next;
 		delete temp;
-		num_items--;
 	}
+	num_items = 0;
 }
 
 
@@ -503,15 +499,17 @@ template<class X> ostream& operator<<(ostream& str, const bag<X> &B){
     return str;
 }
 
-template<class X> bool bag<X>::operator==(const bag<X> &B){
+template<class X> bool bag<X>::operator==(const bag<X> &B) const {
     if(num_items != B.num_items) return false;
 
     auto p1 = first;
     auto p2 = B.first;
     while(p1 && p2){
-        if(p1->data != p2->data) return false;
-        p1 = p1->next;
-        p2 = p2->next;
+		if (p1->data == p2->data) {
+			p1 = p1->next;
+			p2 = p2->next;
+		}
+		else return false;
     }
 
     if(p1 || p2) return false;
@@ -535,7 +533,7 @@ template<class T> ostream& operator<<(ostream& str, const linked_list<T> &L) {
 	return str;
 }
 
-template<class T> bool linked_list<T>::operator==(const linked_list<T> &L){
+template<class T> bool linked_list<T>::operator==(const linked_list<T> &L) const {
     auto p1 = head;
     auto p2 = L.head;
     while(p1 && p2){
@@ -554,7 +552,7 @@ template<class T> bool linked_list<T>::operator==(const linked_list<T> &L){
 //Operator overloading for VECTOR
 template<class T> ostream& operator<<(ostream& str, const vector<T> &V) {
 	auto it = V.begin();
-	str << "[ ";
+	str << "[";
 	while (it != V.end()) {
 		str << *it;
 		it++;
@@ -567,7 +565,7 @@ template<class T> ostream& operator<<(ostream& str, const vector<T> &V) {
 //Operator overloading for LIST
 template<class T> ostream& operator<<(ostream& str, const list<T> &L) {
 	auto it = L.begin();
-	str << "[ ";
+	str << "[";
 	while (it != L.end()) {
 		str << *it;
 		it++;
@@ -665,8 +663,8 @@ int main() {
 	
     vector<ThreeD<int>> V1 = { { 1,2,3 },{ 4,5,6 },{ 7,8,9 } };
     cout << V1 << endl;
-    bag<bag<int>> V2 = { {1,2,3}, {4,5,6}, {7,8,9} };
-    //vector<bag<ThreeD<int>>> V2 = { { { 1,2,3 },{ 4,5,6 },{ 7,8,9 } },{ { 20,30,40 },{ 11,22, 33 } } };
+    //bag<bag<int>> V2 = { {1,2,3}, {4,5,6}, {7,8,9} };
+    vector<bag<ThreeD<int>>> V2 = { { { 1,2,3 },{ 4,5,6 },{ 7,8,9 } },{ { 20,30,40 },{ 11,22, 33 } } };
     cout << V2 << endl;
 
     list<bag<linked_list<int>>> V3 = { { { 1, 2, 3 },{ 4, 5 } },{ { 6,7 },{ 8, 9, 10 } } };
