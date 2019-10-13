@@ -1,3 +1,6 @@
+//HW4 Neil Malu
+//SU NetID: nemalu  SUID: 635692900
+
 //HW4: Due Sunday (Oct. 13) at 11:59PM
 //Implement functions of class linked_list, class node,  class bag, class item
 //All member functions listed need to be implemented.
