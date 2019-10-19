@@ -80,7 +80,109 @@ void DoublyLinkedList::printBackward() {
 
 void DoublyLinkedList::reverse() {
 	if (!head || !head->next) return;
+	Node* p1 = head;
+	Node* p2 = p1;
+	Node* passes = head;
+	while (passes) {
+		while (p1) {
+			p2 = p1;
+			int count1 = 0, count2 = 0;
+			while (p2->value == p1->value) {
+				if (p2->next) p2 = p2->next;
+				count1++;
+			}
+			//p1 points to first node in freq block, p2 points to last
+			if (p2 != tail) {
+				Node* p3 = p2->next;
+				p2 = p3;
+				while (p3->value == p2->value) {
+					if (p3->next) p3 = p3->next;
+					count2++;
+				}
+				cout << "count1: " << count1 << " count2: " << count2 << endl;
+				//p2 points to first node of second block, p3 points to last
 
+				if (count1 == 1 && count2 == 1 && p1->value < p2->value) {
+					if (p1 == head && p2 == tail) {
+						p2->next = p1;
+						p2->previous = nullptr;
+						p1->next = nullptr;
+						p1->previous = p2;
+						head = p2;
+						tail = p1;
+					}
+
+					else if (p1 == head) {
+						p1->next = p2->next;
+						p2->next->previous = p1;
+						p1->previous = p2;
+						p2->next = p1;
+						p2->previous = nullptr;
+						head = p2;
+					}
+
+					else if (p2 == tail) {
+						p1->previous->next = p2;
+						p2->previous = p1->previous;
+						p2->next = p1;
+						p1->previous = p2;
+						p1->next = nullptr;
+						tail = p1;
+					}
+
+					else {
+						p1->previous->next = p2;
+						p2->next->previous = p1;
+						p1->next = p2->next;
+						p2->previous = p1->previous;
+						p1->previous = p2;
+						p2->next = p1;
+					}
+				}
+
+				else if (count1 == count2 && p1->value < p2->value) {
+
+					if (p1 == head && p3 == tail) {
+						p2->previous->next = nullptr;
+						tail = p2->previous;
+						p2->previous = nullptr;
+						p3->next = p1;
+						p1->previous = p3;
+						head = p2;
+					}
+
+					else if (p1 == head) {
+						p2->previous->next = p3->next;
+						p3->next->previous = p2->previous;
+						p2->previous = nullptr;
+						p3->next = p1;
+						p1->previous = p3;
+						head = p2;
+					}
+					else if (p3 == tail) {
+						p2->previous->next = nullptr;
+						tail = p2->previous;
+						p3->next = p1;
+						p2->previous = p1->previous;
+						p1->previous->next = p2;
+						p1->previous = p3;
+					}
+					else {
+						p2->previous->next = p3->next;
+						p3->next->previous = p2->previous;
+						p1->previous->next = p2;
+						p2->previous = p1->previous;
+						p3->next = p1;
+						p1->previous = p3;
+					}
+				}
+			}
+			else break;
+			p1 = p2;
+		}
+		passes = passes->next;
+	}
+	
 }
 
 int main() {
