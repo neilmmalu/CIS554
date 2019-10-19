@@ -176,9 +176,10 @@ void DoublyLinkedList::reverse() {
 						p1->previous = p3;
 					}
 				}
+
+				p1 = p2;
 			}
-			else break;
-			p1 = p2;
+			
 		}
 		passes = passes->next;
 	}
