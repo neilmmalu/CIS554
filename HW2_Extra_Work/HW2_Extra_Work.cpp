@@ -136,11 +136,11 @@ void DoublyLinkedList::reverse() {
 					}
 
 					else if (p1 == head) {
-						p2->previous->next = p3->next;
-						p3->next->previous = p2->previous;
+						p2->previous->next = p3;
+						p3->previous->next = p1;
+						p1->previous = p3->previous;
+						p3->previous = p2->previous;
 						p2->previous = nullptr;
-						p3->next = p1;
-						p1->previous = p3;
 						head = p2;
 					}
 					else if (p3 == tail) {
@@ -152,12 +152,13 @@ void DoublyLinkedList::reverse() {
 						p1->previous = p3;
 					}
 					else {
-						p2->previous->next = p3->next;
-						p3->next->previous = p2->previous;
+						Node* p4 = p1->previous;
+						p2->previous->next = p3;
+						p3->previous->next = p1;
 						p1->previous->next = p2;
-						p2->previous = p1->previous;
-						p3->next = p1;
-						p1->previous = p3;
+						p1->previous = p3->previous;
+						p3->previous = p2->previous;
+						p2->previous = p4;
 					}
 				}
 				else p1 = p2;
