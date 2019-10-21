@@ -105,7 +105,7 @@ void DoublyLinkedList::reverse() {
 				}
 
 				if (count1 == 1 && count2 == 1 && p1->value < p2->value) {
-				
+
 					if (p1 == head) {
 						p1->next = p2->next;
 						p2->next->previous = p1;
@@ -114,7 +114,7 @@ void DoublyLinkedList::reverse() {
 						p2->previous = nullptr;
 						head = p2;
 					}
-	
+
 					else {
 						p1->previous->next = p2;
 						p2->next->previous = p1;
@@ -160,11 +160,12 @@ void DoublyLinkedList::reverse() {
 						p1->previous = p3;
 					}
 				}
+				else p1 = p2;
 
 			}
 			//If p2 is the tail then current block is the last one
-
-			if (p1 == head && p2 == tail) {
+			
+			else if (p1 == head && p2 == tail) {
 				p1->next = nullptr;
 				p1->previous = p2;
 				tail = p1;
@@ -177,6 +178,7 @@ void DoublyLinkedList::reverse() {
 
 		}
 		passes = passes->next;
+		p1 = head;
 	}
 	
 }
