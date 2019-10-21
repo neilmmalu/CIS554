@@ -1,3 +1,6 @@
+//HW2_Extra Neil Malu
+//SU NetID: nemalu SUID: 635692900
+
 //CIS554 HW2 Second 
 //Due: 11:59PM Tuesday ( October 22 )
 /*
@@ -166,15 +169,6 @@ void DoublyLinkedList::reverse() {
 			}
 			//If p2 is the tail then current block is the last one
 			
-			else if (p1 == head && p2 == tail) {
-				p1->next = nullptr;
-				p1->previous = p2;
-				tail = p1;
-				p2->next = p1;
-				p2->previous = nullptr;
-				head = p2;
-				return;
-			}
 			else break;
 
 		}
