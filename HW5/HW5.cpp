@@ -23,7 +23,7 @@ bool even(const int i){
     return i % 2 == 0;
 }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T> *, int> &M){
+template<class T> ostream& operator<<(ostream& str, const map<list<T>*, int> &M){
     for(auto i: M){
         str << *i.first << " ";
     }
@@ -31,7 +31,7 @@ template<class T> ostream& operator<<(ostream& str, const map<list<T> *, int> &M
     return str;
 }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T> , int> &M){
+template<class T> ostream& operator<<(ostream& str, const map<list<T>, int> &M){
     for(auto i: M){
         str << i.first << " ";
     }
