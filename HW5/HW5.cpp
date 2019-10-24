@@ -23,6 +23,40 @@ bool even(const int i){
     return i % 2 == 0;
 }
 
+template<class T> ostream& operator<<(ostream& str, const map<list<T> *, int> &M){
+    for(auto i: M){
+        str << *i.first << " ";
+    }
+    str << i.second;
+    return str;
+}
+
+template<class T> ostream& operator<<(ostream& str, const map<list<T> , int> &M){
+    for(auto i: M){
+        str << i.first << " ";
+    }
+    str << i.second;
+    return str;
+}
+
+template<class T> ostream& operator<<(ostream& str, const list<T> &L){
+    auto it = L.begin();
+    while(it != L.end()){
+        str << *it << " ";
+        it++;
+    }
+    return str;
+}
+
+template<class T> ostream& operator<<(ostream& str, const list<T*> &L){
+    auto it = L.begin();
+    while(it != L.end()){
+        str << **it << " ";
+        it++;
+    }
+    return str;
+}
+
 
 int main() {
     //Write 3 functions: count, odd, even.
