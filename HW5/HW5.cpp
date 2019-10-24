@@ -23,20 +23,34 @@ bool even(const int i){
     return i % 2 == 0;
 }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T>*, int> &M){
+ostream& operator<<(ostream& str, const map<list<int*>*, int, my_comp_class> &M){
     for(auto i: M){
-        str << *i.first << " ";
+        str << *i.first << " " << i.second;
     }
-    str << i.second;
     return str;
 }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T>, int> &M){
+ostream& operator<<(ostream& str, const map<list<int>*, int, my_comp1_class>& M) {
+	for (auto i : M) {
+		str << *i.first << " " << i.second;
+	}
+	return str;
+}
+
+template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp_class> &M){
     for(auto i: M){
         str << i.first << " ";
     }
     str << i.second;
     return str;
+}
+
+template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp1_class>& M) {
+	for (auto i : M) {
+		str << i.first << " ";
+	}
+	str << i.second;
+	return str;
 }
 
 template<class T> ostream& operator<<(ostream& str, const list<T> &L){
@@ -55,6 +69,44 @@ template<class T> ostream& operator<<(ostream& str, const list<T*> &L){
         it++;
     }
     return str;
+}
+
+class my_comp_class {
+public:
+	bool operator()(const map<list<int*>*, int> &M1, const map<list<int*>*, int>& M2)const {
+		
+	}
+};
+
+class my_comp1_class {
+	bool operator()(const map<list<int*>*, int>& M1, const map<list<int*>*, int>& M2)const {
+
+	}
+};
+
+bool my_comp2(const list<list<int*>*>& L1, const list<list<int*>*>& L2) {
+	int sum1 = 0, sum2 = 0;
+	auto it = L1.begin();
+	while (it != L1.end()) {
+		auto it2 = (*it)->begin();
+		while (it2 != (*it)->end()) {
+			sum1 += **it2;
+			it2++;
+		}
+		it++;
+	}
+
+	auto it = L2.begin();
+	while (it != L2.end()) {
+		auto it2 = (*it)->begin();
+		while (it2 != (*it)->end()) {
+			sum2 += **it2;
+			it2++;
+		}
+		it++;
+	}
+
+	return sum1 < sum2;
 }
 
 
@@ -87,7 +139,7 @@ int main() {
     list<list<int*>*> L2{ {new list<int*>{new int{5}, new int{6}, new int{2}, new int{11}}},
     {new list<int*>{new int{2}, new int{7}, new int{10}}} }; //sum is 43
     list<list<int*>*> L3{ {new list<int*>{new int{2}, new int{3}, new int{2}, new int{9}}},
-    {new list<int*>{new int{2}, new int{7}, new int{4}, new int(3)}} };32
+    {new list<int*>{new int{2}, new int{7}, new int{4}, new int(3)}} };//32
 
     /*
     For the following sort of L4, L5, and L6, compare the sum of all values for L1, L2, and L3.
@@ -108,7 +160,7 @@ int main() {
 
     list< list<list<int*>*>> L6{ L2, L1, L3 };
     cout << L6 << endl;
-    L6.sort(Lambda Expression Here); //Use lambda Expression.
+	L6.sort([](const list<int*> L1, const list<int*> L2) { int sum1 = 0, sum2 = 0;  }); //Use lambda Expression.
     cout << L6 << endl;
     
     cin.get();
