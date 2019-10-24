@@ -5,6 +5,24 @@
 #include <map>
 using namespace std;
 
+int count(const list<int> &L, bool(*f)(const int i)){
+    int count = 0;
+    auto it = L.begin();
+    while(it != L.end()){
+        if(f(*it)) count++;
+        it++;
+    }
+    return count;
+}
+
+bool odd(const int i){
+    return i % 2 == 1;
+}
+
+bool even(const int i){
+    return i % 2 == 0;
+}
+
 
 int main() {
     //Write 3 functions: count, odd, even.
@@ -15,6 +33,7 @@ int main() {
     cout << count(L0, odd) << endl;
     cout << count(L0, even) << endl;
 
+    
     //You need to design a class of comparison functions (or functors) to allow map to sort elements.
     //This class is called my_comp_class.  Remember that you need to include const for sorting of map.
     //You also need to overload the needed operator<< to print DB.
@@ -42,7 +61,7 @@ int main() {
     Implement the comparison functions my_comp2, my_comp3, my_comp4 as stated below.
     You also need to overload the needed operator<< to allow the printing.
     */
-
+    
     list< list<list<int*>*>> L4{ L1, L2, L3 };
     cout << L4 << endl;
     L4.sort(my_comp2);//Design the function my_comp2 using regular function implementation.
@@ -57,7 +76,7 @@ int main() {
     cout << L6 << endl;
     L6.sort(Lambda Expression Here); //Use lambda Expression.
     cout << L6 << endl;
-
+    
     cin.get();
     return 0;
 }
