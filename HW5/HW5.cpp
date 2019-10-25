@@ -15,13 +15,9 @@ int count(const list<int> &L, bool(*f)(const int i)){
     return count;
 }
 
-bool odd(const int i){
-    return i % 2 == 1;
-}
+bool odd(const int i){ return i % 2 == 1; }
 
-bool even(const int i){
-    return i % 2 == 0;
-}
+bool even(const int i){ return i % 2 == 0; }
 
 ostream& operator<<(ostream& str, const map<list<int*>*, int, my_comp_class> &M){
     for(auto i: M){
