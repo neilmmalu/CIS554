@@ -21,7 +21,7 @@ bool even(const int i){ return i % 2 == 0; }
 
 class my_comp_class {
 public:
-	bool operator()(map<list<int*>*, int>& M1, map<list<int*>*, int>& M2) const {
+	bool operator() const (const map<list<int*>*, int>& M1, const map<list<int*>*, int>& M2) const {
 		int sum1 = 0, sum2 = 0;
 		for (auto i : M1) {
 			for (auto j : *i.first) {
@@ -40,7 +40,7 @@ public:
 };
 
 class my_comp1_class {
-	bool operator()(map<list<int>*, int>& M1, map<list<int>*, int>& M2) const {
+	bool operator() const (const map<list<int>*, int>& M1, const map<list<int>*, int>& M2) const {
 		int sum1 = 0, sum2 = 0;
 		for (auto i : M1) {
 			for (auto j : *i.first) {
