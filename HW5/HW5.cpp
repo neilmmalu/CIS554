@@ -19,6 +19,46 @@ bool odd(const int i){ return i % 2 == 1; }
 
 bool even(const int i){ return i % 2 == 0; }
 
+class my_comp_class {
+public:
+	bool operator()(map<list<int*>*, int>& M1, map<list<int*>*, int>& M2) const {
+		int sum1 = 0, sum2 = 0;
+		for (auto i : M1) {
+			for (auto j : *i.first) {
+				sum1 += *j;
+			}
+		}
+
+		for (auto i : M2) {
+			for (auto j : *i.first) {
+				sum2 += *j;
+			}
+		}
+
+		return sum1 < sum2;
+	}
+};
+
+class my_comp1_class {
+	bool operator()(map<list<int>*, int>& M1, map<list<int>*, int>& M2) const {
+		int sum1 = 0, sum2 = 0;
+		for (auto i : M1) {
+			for (auto j : *i.first) {
+				sum1 += j;
+			}
+		}
+
+		for (auto i : M2) {
+			for (auto j : *i.first) {
+				sum2 += j;
+			}
+		}
+
+		return sum1 < sum2;
+	}
+};
+
+/*
 ostream& operator<<(ostream& str, const map<list<int*>*, int, my_comp_class> &M){
     for(auto i: M){
         str << *i.first << " " << i.second;
@@ -26,26 +66,38 @@ ostream& operator<<(ostream& str, const map<list<int*>*, int, my_comp_class> &M)
     return str;
 }
 
-ostream& operator<<(ostream& str, const map<list<int>*, int, my_comp1_class>& M) {
+ostream& operator<<(ostream& str, const map<list<int>*, int, my_comp1_class> &M) {
 	for (auto i : M) {
 		str << *i.first << " " << i.second;
 	}
 	return str;
+}*/
+
+template<class T> ostream& operator<<(ostream& str, const map<list<T>*, int, my_comp_class> &M){
+	for (auto i : M) {
+		str << i.first << " " << i.second;
+	}
+	return str;
 }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp_class> &M){
-    for(auto i: M){
-        str << i.first << " ";
-    }
-    str << i.second;
-    return str;
+template<class T> ostream& operator<<(ostream& str, const map<list<T>*, int, my_comp1_class>& M) {
+	for (auto i : M) {
+		str << i.first << " " << i.second;
+	}
+	return str;
+}
+
+template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp_class>& M) {
+	for (auto i : M) {
+		str << i.first << " " << i.second;
+	}
+	return str;
 }
 
 template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp1_class>& M) {
 	for (auto i : M) {
-		str << i.first << " ";
+		str << i.first << " " << i.second;
 	}
-	str << i.second;
 	return str;
 }
 
@@ -67,19 +119,8 @@ template<class T> ostream& operator<<(ostream& str, const list<T*> &L){
     return str;
 }
 
-class my_comp_class {
-public:
-	bool operator()(const map<list<int*>*, int> &M1, const map<list<int*>*, int>& M2)const {
-		
-	}
-};
 
-class my_comp1_class {
-	bool operator()(const map<list<int*>*, int>& M1, const map<list<int*>*, int>& M2)const {
-
-	}
-};
-
+/*
 bool my_comp2(const list<list<int*>*>& L1, const list<list<int*>*>& L2) {
 	int sum1 = 0, sum2 = 0;
 	auto it = L1.begin();
@@ -103,7 +144,7 @@ bool my_comp2(const list<list<int*>*>& L1, const list<list<int*>*>& L2) {
 	}
 
 	return sum1 < sum2;
-}
+}*/
 
 
 int main() {
@@ -143,7 +184,7 @@ int main() {
     Implement the comparison functions my_comp2, my_comp3, my_comp4 as stated below.
     You also need to overload the needed operator<< to allow the printing.
     */
-    
+    /*
     list< list<list<int*>*>> L4{ L1, L2, L3 };
     cout << L4 << endl;
     L4.sort(my_comp2);//Design the function my_comp2 using regular function implementation.
@@ -158,7 +199,7 @@ int main() {
     cout << L6 << endl;
 	L6.sort([](const list<int*> L1, const list<int*> L2) { int sum1 = 0, sum2 = 0;  }); //Use lambda Expression.
     cout << L6 << endl;
-    
+    */
     cin.get();
     return 0;
 }
