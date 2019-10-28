@@ -117,6 +117,34 @@ bool my_comp2(const list<list<int*>*>& L1, const list<list<int*>*>& L2) {
 	return sum1 < sum2;
 }
 
+class list_comp_class{
+public:
+    bool operator() (const list<list<int*>*> &L1, const list<list<int*>*> &L2) const{
+        int sum1 = 0, sum2 = 0;
+        auto it11 = L1.begin();
+        while (it11 != L1.end()) {
+            auto it12 = (*it11)->begin();
+            while (it12 != (*it11)->end()) {
+                sum1 += **it12;
+                it12++;
+            }
+            it11++;
+        }
+
+        auto it21 = L2.begin();
+        while (it21 != L2.end()) {
+            auto it22 = (*it21)->begin();
+            while (it22 != (*it21)->end()) {
+                sum2 += **it22;
+                it22++;
+            }
+            it21++;
+        }
+
+        return sum1 < sum2;
+    }
+} my_comp3;
+
 
 int main() {
     //Write 3 functions: count, odd, even.
@@ -160,12 +188,12 @@ int main() {
     cout << L4 << endl;
     L4.sort(my_comp2);//Design the function my_comp2 using regular function implementation.
     cout << L4 << endl;
-	/*
+	
     list< list<list<int*>*>> L5{ L1, L3, L2 };
     cout << L5 << endl;
     L5.sort(my_comp3); //Design my_comp3 using a functor.
     cout << L5 << endl;
-
+    /*
     list< list<list<int*>*>> L6{ L2, L1, L3 };
     cout << L6 << endl;
 	L6.sort([](const list<int*> L1, const list<int*> L2) { int sum1 = 0, sum2 = 0;  }); //Use lambda Expression.
