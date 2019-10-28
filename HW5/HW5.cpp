@@ -91,27 +91,26 @@ template<class T> ostream& operator<<(ostream& str, const list<T*> &L){
 }
 
 
-
 bool my_comp2(const list<list<int*>*>& L1, const list<list<int*>*>& L2) {
 	int sum1 = 0, sum2 = 0;
-	auto it11 = L1.begin();
-	while (it11 != L1.end()) {
-		auto it12 = (*it11)->begin();
-		while (it12 != (*it11)->end()) {
-			sum1 += **it12;
-			it12++;
+	auto it = L1.begin();
+	while (it != L1.end()) {
+		auto it2 = (*it)->begin();
+		while (it2 != (*it)->end()) {
+			sum1 += **it2;
+			it2++;
 		}
-		it11++;
+		it++;
 	}
 
-	auto it21 = L2.begin();
-	while (it21 != L2.end()) {
-		auto it22 = (*it21)->begin();
-		while (it22 != (*it21)->end()) {
-			sum2 += **it22;
-			it22++;
+	it = L2.begin();
+	while (it != L2.end()) {
+		auto it2 = (*it)->begin();
+		while (it2 != (*it)->end()) {
+			sum2 += **it2;
+			it2++;
 		}
-		it21++;
+		it++;
 	}
 
 	return sum1 < sum2;
@@ -121,24 +120,24 @@ class list_comp_class{
 public:
     bool operator() (const list<list<int*>*> &L1, const list<list<int*>*> &L2) const{
         int sum1 = 0, sum2 = 0;
-        auto it11 = L1.begin();
-        while (it11 != L1.end()) {
-            auto it12 = (*it11)->begin();
-            while (it12 != (*it11)->end()) {
-                sum1 += **it12;
-                it12++;
+        auto it = L1.begin();
+        while (it != L1.end()) {
+            auto it2 = (*it)->begin();
+            while (it2 != (*it)->end()) {
+                sum1 += **it2;
+                it2++;
             }
-            it11++;
+            it++;
         }
 
-        auto it21 = L2.begin();
-        while (it21 != L2.end()) {
-            auto it22 = (*it21)->begin();
-            while (it22 != (*it21)->end()) {
-                sum2 += **it22;
-                it22++;
+        it = L2.begin();
+        while (it != L2.end()) {
+            auto it2 = (*it)->begin();
+            while (it2 != (*it)->end()) {
+                sum2 += **it2;
+                it2++;
             }
-            it21++;
+            it++;
         }
 
         return sum1 < sum2;
