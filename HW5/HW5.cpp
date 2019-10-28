@@ -21,70 +21,71 @@ bool even(const int i){ return i % 2 == 0; }
 
 class my_comp_class {
 public:
-	bool operator() (const map<list<int*>*, int>& M1, const map<list<int*>*, int>& M2) const {
+	bool operator() (const list<int*>* L1, const list<int*>* L2) const {
 		int sum1 = 0, sum2 = 0;
-		for (auto i : M1) {
-			for (auto j : *i.first) {
-				sum1 += *j;
-			}
-		}
+		auto it = L1.begin();
+        while(it != L1.end()){
+            sum1 += **it;
+            it++;
+        }
 
-		for (auto i : M2) {
-			for (auto j : *i.first) {
-				sum2 += *j;
-			}
-		}
+		auto it = L2.begin();
+        while(it != L2.end()){
+            sum2 += **it;
+            it++;
+        }
 
 		return sum1 < sum2;
 	}
 };
 
 class my_comp1_class {
-	bool operator() (const map<list<int>*, int>& M1, const map<list<int>*, int>& M2) const {
+public:
+	bool operator() (const list<int>* L1, const list<int>* L2) const {
 		int sum1 = 0, sum2 = 0;
-		for (auto i : M1) {
-			for (auto j : *i.first) {
-				sum1 += j;
-			}
-		}
+        auto it = L1.begin();
+        while(it != L1.end()){
+            sum1 += *it;
+            it++;
+        }
 
-		for (auto i : M2) {
-			for (auto j : *i.first) {
-				sum2 += j;
-			}
-		}
+        auto it = L2.begin();
+        while(it != L2.end()){
+            sum2 += *it;
+            it++;
+        }
 
-		return sum1 < sum2;
+        return sum1 < sum2;
 	}
 };
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T*>*, int, my_comp_class> &M){
+template<class T, class X> ostream& operator<<(ostream& str, const map<T*, int, X> &M){
 	for (auto i : M) {
 		str << i.first << " " << i.second;
 	}
 	return str;
 }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T>*, int, my_comp1_class> &M) {
+template<class T, class X> ostream& operator<<(ostream& str, const map<T, int, X> &M) {
 	for (auto i : M) {
 		str << i.first << " " << i.second;
 	}
 	return str;
 }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T*>, int, my_comp_class> &M) {
-	for (auto i : M) {
-		str << i.first << " " << i.second;
-	}
-	return str;
-}
+// template<class T> ostream& operator<<(ostream& str, const map<list<T*>, int, my_comp_class> &M) {
+// 	for (auto i : M) {
+// 		str << i.first << " " << i.second;
+// 	}
+// 	return str;
+// }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp1_class> &M) {
-	for (auto i : M) {
-		str << i.first << " " << i.second;
-	}
-	return str;
-}
+// template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp1_class> &M) {
+// 	for (auto i : M) {
+// 		str << i.first << " " << i.second;
+// 	}
+// 	return str;
+// }
 
 template<class T> ostream& operator<<(ostream& str, const list<T> &L){
     auto it = L.begin();
