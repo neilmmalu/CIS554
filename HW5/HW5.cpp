@@ -58,22 +58,7 @@ class my_comp1_class {
 	}
 };
 
-/*
-ostream& operator<<(ostream& str, const map<list<int*>*, int, my_comp_class> &M){
-    for(auto i: M){
-        str << *i.first << " " << i.second;
-    }
-    return str;
-}
-
-ostream& operator<<(ostream& str, const map<list<int>*, int, my_comp1_class> &M) {
-	for (auto i : M) {
-		str << *i.first << " " << i.second;
-	}
-	return str;
-}*/
-
-template<class T> ostream& operator<<(ostream& str, const map<list<T>*, int, my_comp_class> &M){
+template<class T> ostream& operator<<(ostream& str, const map<list<T*>*, int, my_comp_class> &M){
 	for (auto i : M) {
 		str << i.first << " " << i.second;
 	}
@@ -87,7 +72,7 @@ template<class T> ostream& operator<<(ostream& str, const map<list<T>*, int, my_
 	return str;
 }
 
-template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp_class> &M) {
+template<class T> ostream& operator<<(ostream& str, const map<list<T*>, int, my_comp_class> &M) {
 	for (auto i : M) {
 		str << i.first << " " << i.second;
 	}
