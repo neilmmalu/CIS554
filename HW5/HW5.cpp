@@ -23,18 +23,17 @@ class my_comp_class {
 public:
 	bool operator() (const list<int*>* L1, const list<int*>* L2) const {
 		int sum1 = 0, sum2 = 0;
-		auto it = L1.begin();
-        while(it != L1.end()){
-            sum1 += **it;
-            it++;
+		auto it1 = L1->begin();
+        while(it1 != L1->end()){
+            sum1 += **it1;
+            it1++;
         }
 
-		auto it = L2.begin();
-        while(it != L2.end()){
-            sum2 += **it;
-            it++;
+		auto it2 = L2->begin();
+        while(it2 != L2->end()){
+            sum2 += **it2;
+            it2++;
         }
-
 		return sum1 < sum2;
 	}
 };
@@ -43,16 +42,16 @@ class my_comp1_class {
 public:
 	bool operator() (const list<int>* L1, const list<int>* L2) const {
 		int sum1 = 0, sum2 = 0;
-        auto it = L1.begin();
-        while(it != L1.end()){
-            sum1 += *it;
-            it++;
+        auto it1 = L1->begin();
+        while(it1 != L1->end()){
+            sum1 += *it1;
+            it1++;
         }
 
-        auto it = L2.begin();
-        while(it != L2.end()){
-            sum2 += *it;
-            it++;
+        auto it2 = L2->begin();
+        while(it2 != L2->end()){
+            sum2 += *it2;
+            it2++;
         }
 
         return sum1 < sum2;
@@ -61,31 +60,17 @@ public:
 
 template<class T, class X> ostream& operator<<(ostream& str, const map<T*, int, X> &M){
 	for (auto i : M) {
-		str << i.first << " " << i.second;
+		str << *(i.first) << " " << i.second << " ";
 	}
 	return str;
 }
 
 template<class T, class X> ostream& operator<<(ostream& str, const map<T, int, X> &M) {
 	for (auto i : M) {
-		str << i.first << " " << i.second;
+		str << i.first << " " << i.second << " ";
 	}
 	return str;
 }
-
-// template<class T> ostream& operator<<(ostream& str, const map<list<T*>, int, my_comp_class> &M) {
-// 	for (auto i : M) {
-// 		str << i.first << " " << i.second;
-// 	}
-// 	return str;
-// }
-
-// template<class T> ostream& operator<<(ostream& str, const map<list<T>, int, my_comp1_class> &M) {
-// 	for (auto i : M) {
-// 		str << i.first << " " << i.second;
-// 	}
-// 	return str;
-// }
 
 template<class T> ostream& operator<<(ostream& str, const list<T> &L){
     auto it = L.begin();
@@ -106,31 +91,31 @@ template<class T> ostream& operator<<(ostream& str, const list<T*> &L){
 }
 
 
-/*
+
 bool my_comp2(const list<list<int*>*>& L1, const list<list<int*>*>& L2) {
 	int sum1 = 0, sum2 = 0;
-	auto it = L1.begin();
-	while (it != L1.end()) {
-		auto it2 = (*it)->begin();
-		while (it2 != (*it)->end()) {
-			sum1 += **it2;
-			it2++;
+	auto it11 = L1.begin();
+	while (it11 != L1.end()) {
+		auto it12 = (*it11)->begin();
+		while (it12 != (*it11)->end()) {
+			sum1 += **it12;
+			it12++;
 		}
-		it++;
+		it11++;
 	}
 
-	auto it = L2.begin();
-	while (it != L2.end()) {
-		auto it2 = (*it)->begin();
-		while (it2 != (*it)->end()) {
-			sum2 += **it2;
-			it2++;
+	auto it21 = L2.begin();
+	while (it21 != L2.end()) {
+		auto it22 = (*it21)->begin();
+		while (it22 != (*it21)->end()) {
+			sum2 += **it22;
+			it22++;
 		}
-		it++;
+		it21++;
 	}
 
 	return sum1 < sum2;
-}*/
+}
 
 
 int main() {
@@ -170,12 +155,12 @@ int main() {
     Implement the comparison functions my_comp2, my_comp3, my_comp4 as stated below.
     You also need to overload the needed operator<< to allow the printing.
     */
-    /*
+    
     list< list<list<int*>*>> L4{ L1, L2, L3 };
     cout << L4 << endl;
     L4.sort(my_comp2);//Design the function my_comp2 using regular function implementation.
     cout << L4 << endl;
-
+	/*
     list< list<list<int*>*>> L5{ L1, L3, L2 };
     cout << L5 << endl;
     L5.sort(my_comp3); //Design my_comp3 using a functor.
