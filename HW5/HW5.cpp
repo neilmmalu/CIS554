@@ -193,12 +193,35 @@ int main() {
     cout << L5 << endl;
     L5.sort(my_comp3); //Design my_comp3 using a functor.
     cout << L5 << endl;
-    /*
+
     list< list<list<int*>*>> L6{ L2, L1, L3 };
     cout << L6 << endl;
-	L6.sort([](const list<int*> L1, const list<int*> L2) { int sum1 = 0, sum2 = 0;  }); //Use lambda Expression.
+	L6.sort([](const list<int*> L1, const list<int*> L2) {
+        int sum1 = 0, sum2 = 0;
+        auto it11 = L1.begin();
+        while (it11 != L1.end()) {
+            auto it12 = (*it11)->begin();
+            while (it12 != (*it11)->end()) {
+                sum1 += **it12;
+                it12++;
+            }
+            it11++;
+        }
+
+        auto it21 = L2.begin();
+        while (it21 != L2.end()) {
+            auto it22 = (*it21)->begin();
+            while (it22 != (*it21)->end()) {
+                sum2 += **it22;
+                it22++;
+            }
+            it21++;
+        }
+
+        return sum1 < sum2;
+    }); //Use lambda Expression.
     cout << L6 << endl;
-    */
+    
     cin.get();
     return 0;
 }
