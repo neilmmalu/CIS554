@@ -79,6 +79,16 @@ shared_ptr<node> tree::find(int i){
     return nullptr;
 }
 
+int tree::sum(shared_ptr<node> p){
+    shared_ptr<node> stop = root;
+    int sum = 0;
+    while(p){
+        sum += p->value;
+        p = p->right;
+        if(p == stop) break;
+    }
+    return sum;
+}
 
 int main() {
     tree T1(3);
