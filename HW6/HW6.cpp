@@ -51,7 +51,33 @@ public:
     //its address; if not found, return nullptr;
 };
 
+tree::~tree(){
+    shared_ptr<node> p = root;
+    while(p->r_child) p = p->r_child;
+    p.reset();
+}
 
+ostream& tree::operator<<(ostream& str, const tree &T){
+    shared_ptr<node> p = T.root;
+    shared_ptr<node> stop = T.root;
+    while(p){
+        str << p->value << " ";
+        p = p->right;
+        if(p == stop) break;
+    }
+    return str;
+}
+
+shared_ptr<node> tree::find(int i){
+    shared_ptr<node> p = root;
+    shared_ptr<node> stop = root;
+    while(p){
+        if(p->value == i) return p;
+        p = p->right;
+        if(p == stop) break;
+    }
+    return nullptr;
+}
 
 
 int main() {
