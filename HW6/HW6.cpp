@@ -56,13 +56,13 @@ tree::tree(int n){
     shared_ptr<node> p;
     //Create the linked list
     for(int i = 0; i < size; i++){
-        shared_ptr<node> n = make_shared<node>(i);
+        shared_ptr<node> newNode = make_shared<node>(i);
         if(!root) { 
-            root = n;
+            root = newNode;
             p = root;
         }
-        p->right = n;
-        p = n;
+        p->right = newNode;
+        p = newNode;
     }
     //Create the tree
 
