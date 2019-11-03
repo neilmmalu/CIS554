@@ -51,6 +51,23 @@ public:
     //its address; if not found, return nullptr;
 };
 
+tree::tree(int n){
+    int size = pow(2, n-1);
+    shared_ptr<node> p;
+    //Create the linked list
+    for(int i = 0; i < size; i++){
+        shared_ptr<node> n = make_shared<node>(i);
+        if(!root) { 
+            root = n;
+            p = root;
+        }
+        p->right = n;
+        p = n;
+    }
+    //Create the tree
+
+}
+
 tree::~tree(){
     shared_ptr<node> p = root;
     while(p->r_child) p = p->r_child;
