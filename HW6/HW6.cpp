@@ -91,11 +91,10 @@ tree::~tree(){
 
 ostream& tree::operator<<(ostream& str, const tree &T){
     shared_ptr<node> p = T.root;
-    shared_ptr<node> stop = T.root;
     while(p){
         str << p->value << " ";
         p = p->right;
-        if(p == stop) break;
+        if(p == T.root) break;
     }
     return str;
 }
