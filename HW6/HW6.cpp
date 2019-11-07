@@ -51,7 +51,9 @@ public:
     //its address; if not found, return nullptr;
 };
 
+//Constructor
 tree::tree(int n){
+    level = n;
     int size = pow(2, n) - 1;
     shared_ptr<node> p;
     //Create the linked list
@@ -77,9 +79,10 @@ tree::tree(int n){
     }
 }
 
+//Initializer List
 tree::tree(const initializer_list<int> &V){
     auto it = V.begin();
-    int levels = *it;
+    level = *it;
     it++;
     int size = pow(2, levels) - 1;
     for(int i = 0; i < size; i++){
@@ -106,7 +109,15 @@ tree::tree(const initializer_list<int> &V){
     }
 }
 
+//Copy constructor
+tree::tree(const tree &T){
+    level = T.level;
+    root = make_shared<node>(T.root->value);
+    shared_ptr<node> p = T.root;
 
+}
+
+//Destructor
 tree::~tree(){
     shared_ptr<node> p = root;
     while(p->r_child) p = p->r_child;
