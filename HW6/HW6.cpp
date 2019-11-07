@@ -71,7 +71,7 @@ tree::tree(int n){
     if(!child) return;
     for(int i = 0; i < size/2; i++){
         parent->l_child = child;
-        child = child->r_child;
+        child = child->right;
         parent->r_child = child;
         child = child->right;
     }
