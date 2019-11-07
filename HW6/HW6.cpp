@@ -67,18 +67,42 @@ tree::tree(int n){
     //Create the tree
 
     shared_ptr<node> parent = root;
-    shared_ptr<node> child = root;
+    shared_ptr<node> child = root->right;
+    if(!child) return;
     for(int i = 0; i < size/2; i++){
-        shared_ptr<node> child = parent;
-        int l = 2*i + 1;
-        while(l != i){
-            if(child) child = child->right;
-            else break;
-            l--;
-        }
         parent->l_child = child;
-        if(child) parent->r_child = child->right;
-        parent = parent->right;
+        child = child->r_child;
+        parent->r_child = child;
+        child = child->right;
+    }
+}
+
+tree::tree(const initializer_list<int> &V){
+    auto it = V.begin();
+    int levels = *it;
+    it++;
+    int size = pow(2, levels) - 1;
+    for(int i = 0; i < size; i++){
+        shared_ptr<node> newNode = make_shared<node>(*it);
+        if(!root) { 
+            root = newNode;
+            p = root;
+        }
+        p->right = newNode;
+        p = newNode;
+        it++;
+    }
+
+    //Create the tree
+
+    shared_ptr<node> parent = root;
+    shared_ptr<node> child = root->right;
+    if(!child) return;
+    for(int i = 0; i < size/2; i++){
+        parent->l_child = child;
+        child = child->r_child;
+        parent->r_child = child;
+        child = child->right;
     }
 }
 
