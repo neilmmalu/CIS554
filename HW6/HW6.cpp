@@ -52,7 +52,7 @@ public:
 };
 
 tree::tree(int n){
-    int size = pow(2, n-1);
+    int size = pow(2, n) - 1;
     shared_ptr<node> p;
     //Create the linked list
     for(int i = 0; i < size; i++){
@@ -66,7 +66,22 @@ tree::tree(int n){
     }
     //Create the tree
 
+    shared_ptr<node> parent = root;
+    shared_ptr<node> child = root;
+    int level = 0;
+    for(int i = 0; i < size/2; i++){
+        shared_ptr<node> child = parent;
+        int l = 2*i + 1;
+        while(l){
+            child = child->right;
+            l--;
+        }
+        parent->l_child = child;
+        parent->r_child = child->right;
+        parent = parent->right;
+    }
 }
+
 
 tree::~tree(){
     shared_ptr<node> p = root;
