@@ -125,24 +125,18 @@ ostream& tree::operator<<(ostream& str, const tree &T){
 
 shared_ptr<node> tree::find(int i){
     shared_ptr<node> p = root;
-    shared_ptr<node> stop = root;
     while(p){
         if(p->value == i) return p;
         p = p->right;
-        if(p == stop) break;
+        if(p == root) break;
     }
     return nullptr;
 }
 
 int tree::sum(shared_ptr<node> p){
-    shared_ptr<node> stop = root;
-    int sum = 0;
-    while(p){
-        sum += p->value;
-        p = p->right;
-        if(p == stop) break;
-    }
-    return sum;
+    if(!p) return 0;
+
+    return p->value + sum(p->l_child) + sum(p->r_child);
 }
 
 int main() {
