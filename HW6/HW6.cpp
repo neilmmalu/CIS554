@@ -68,16 +68,16 @@ tree::tree(int n){
 
     shared_ptr<node> parent = root;
     shared_ptr<node> child = root;
-    int level = 0;
     for(int i = 0; i < size/2; i++){
         shared_ptr<node> child = parent;
         int l = 2*i + 1;
-        while(l){
-            child = child->right;
+        while(l != i){
+            if(child) child = child->right;
+            else break;
             l--;
         }
         parent->l_child = child;
-        parent->r_child = child->right;
+        if(child) parent->r_child = child->right;
         parent = parent->right;
     }
 }
