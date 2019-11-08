@@ -230,6 +230,7 @@ void tree::operator=(tree&& T) {
 
 //Destructor
 tree::~tree(){
+	//Delete the last node.
     shared_ptr<node> p = root;
 	while (p && p->r_child) {
 		if (p->r_child->right == root) {
