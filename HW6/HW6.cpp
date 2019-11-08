@@ -261,14 +261,54 @@ int tree::sum(shared_ptr<node> p){
 }
 
 void tree::delete_level(int i){
-    int parent_level = pow(2, i-1);
-    shared_ptr<node> p = root;
-    while(parent_level){
-        p = p->right;
+    int parent_level = pow(2, i - 2);
+	int num_nodes = pow(2, i - 1);
+    shared_ptr<node> parent = root;
+    while(parent_level > 1){
+        parent = parent->right;
         parent_level--;
     }
-    
 
+	shared_ptr<node> child = parent->l_child;
+
+	//If its the last level of the tree
+	if (!child->l_child) {
+		shared_ptr<node> p = child;
+		int par_nodes = num_nodes / 2;
+		while (num_nodes) {
+			p = child->right;
+			child.reset();
+			child = p;
+			num_nodes--;
+		}
+
+		while (par_nodes > 1) {
+			parent = parent->right;
+			par_nodes--;
+		}
+		parent->right = root;
+		return;
+	}
+
+	int par_nodes = num_nodes / 2;
+	shared_ptr<node> first_child = child->l_child;
+	shared_ptr<node> last_parent = parent;
+	while (par_nodes > 1) {
+		last_parent = last_parent->right;
+		par_nodes--;
+	}
+	last_parent->right = first_child;
+	par_nodes = num_nodes / 2;
+	while (par_nodes) {
+		parent->l_child = child->l_child;
+		parent->l_child->right = child->r_child->right;
+		child = child->right;
+		parent->r_child = child->l_child;
+		parent->r_child->right = child->r_child->right;
+		child = child->right;
+		parent = parent->right;
+		par_nodes--;
+	}
 }
 
 int main() {
@@ -288,10 +328,10 @@ int main() {
     
     T4 = T3.ThreeTimes();
     cout << T4 << endl;//will print 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72
-    /*
+    
     T4.delete_level(3);
     cout << T4 <<endl;//will print 30 33 36 51 57 63 67
-    */  
+      
     cout<<T3.sum(T3.find(12)) << endl; //will print 133
     
     
