@@ -337,10 +337,6 @@ int main() {
     
     tree T3(T2);
     cout << T3 << endl; //will print 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
-    
-	T3 = T1;
-
-	cout << T3 << endl;
 
     tree T4;
     T4 = T3;
