@@ -349,8 +349,9 @@ ostream& operator<<(ostream& str, const tree& T) {
 		p = p->right;
 		if (p == T.root) break;
 	}
-	/*
+	
 	cout << endl;
+    /*
 	while (p) {
 		str << p.use_count() << " ";
 		p = p->right;
