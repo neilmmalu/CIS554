@@ -149,24 +149,10 @@ tree::tree(const tree &T){
 //L-Value operator
 void tree::operator=(const tree& T) {
 	shared_ptr<node> p = root;
-	while (p && p->r_child) {
-		if (p->r_child->right == root) {
-			p->r_child.reset();
-			break;
-		}
-		else p = p->r_child;
-	}
-	p = root;
-	while (p && p->right) {
-		if (p->right->right == root) {
-			p->right.reset();
-			break;
-		}
-		else {
-			p = p->right;
-		}
-	}
+	while (p && p->r_child) p = p->r_child;
+	if (p) p->right.reset();
 	root.reset();
+
 	level = T.level;
 	shared_ptr<node> p1 = T.root;
 	while (p1) {
@@ -205,24 +191,10 @@ tree::tree(tree&& T) {
 //R-value operator
 void tree::operator=(tree&& T) {
 	shared_ptr<node> p = root;
-	while (p && p->r_child) {
-		if (p->r_child->right == root) {
-			p->r_child.reset();
-			break;
-		}
-		else p = p->r_child;
-	}
-	p = root;
-	while (p && p->right) {
-		if (p->right->right == root) {
-			p->right.reset();
-			break;
-		}
-		else {
-			p = p->right;
-		}
-	}
+	while (p && p->r_child) p = p->r_child;
+	if (p) p->right.reset();
 	root.reset();
+
 	root = T.root;
 	level = T.level;
 	T.root = nullptr;
@@ -230,25 +202,10 @@ void tree::operator=(tree&& T) {
 
 //Destructor
 tree::~tree(){
-	//Delete the last node.
+	//Delete the right-> of the last node. Destructor will delete the root pointer. All ref count will be 0
     shared_ptr<node> p = root;
-	while (p && p->r_child) {
-		if (p->r_child->right == root) {
-			p->r_child.reset();
-			break;
-		}
-		else p = p->r_child;
-	}
-	p = root;
-	while (p && p->right) {
-		if (p->right->right == root) {
-			p->right.reset();
-			break;
-		}
-		else {
-			p = p->right;
-		}
-	}
+	while (p && p->r_child) p = p->r_child;
+	if (p) p->right.reset();
 }
 
 tree tree::ThreeTimes() {
@@ -358,8 +315,6 @@ void tree::delete_level(int i){
 			first_child = first_child->right;
 		}
 	}
-
-	
 }
 
 ostream& operator<<(ostream& str, const tree& T) {
@@ -383,6 +338,10 @@ int main() {
     tree T3(T2);
     cout << T3 << endl; //will print 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
     
+	T3 = T1;
+
+	cout << T3 << endl;
+
     tree T4;
     T4 = T3;
     cout << T4 << endl; //will print 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
