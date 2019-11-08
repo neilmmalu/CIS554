@@ -261,7 +261,14 @@ int tree::sum(shared_ptr<node> p){
 }
 
 void tree::delete_level(int i){
+    int parent_level = pow(2, i-1);
+    shared_ptr<node> p = root;
+    while(parent_level){
+        p = p->right;
+        parent_level--;
+    }
     
+
 }
 
 int main() {
