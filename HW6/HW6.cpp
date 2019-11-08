@@ -1,3 +1,5 @@
+//HW6 Neil Malu
+//SU NetID: nemalu SUID: 635692900
 //CIS554 HW6   Due: 11:59PM, Friday, Nov. 8.
 #include <iostream>
 #include <memory>
@@ -66,6 +68,7 @@ tree::tree(int n){
         p->right = newNode;
         p = newNode;
     }
+	p->right = root;
     //Create the tree
 
     shared_ptr<node> parent = root;
@@ -97,7 +100,7 @@ tree::tree(const initializer_list<int> &V){
         p = newNode;
         it++;
     }
-
+	p->right = root;
     //Create the tree
 
     shared_ptr<node> parent = root;
@@ -128,6 +131,7 @@ tree::tree(const tree &T){
 		p1 = p1->right;
 		if (p1 == T.root) break;
 	}
+	p->right = root;
 
 	int size = pow(2, level) - 1;
 	shared_ptr<node> parent = root;
@@ -145,10 +149,24 @@ tree::tree(const tree &T){
 //L-Value operator
 void tree::operator=(const tree& T) {
 	shared_ptr<node> p = root;
-	while (p && p->r_child) p = p->r_child;
-	p = nullptr;
-	root = nullptr;
-
+	while (p && p->r_child) {
+		if (p->r_child->right == root) {
+			p->r_child.reset();
+			break;
+		}
+		else p = p->r_child;
+	}
+	p = root;
+	while (p && p->right) {
+		if (p->right->right == root) {
+			p->right.reset();
+			break;
+		}
+		else {
+			p = p->right;
+		}
+	}
+	root.reset();
 	level = T.level;
 	shared_ptr<node> p1 = T.root;
 	while (p1) {
@@ -162,6 +180,7 @@ void tree::operator=(const tree& T) {
 		p1 = p1->right;
 		if (p1 == T.root) break;
 	}
+	p->right = root;
 
 	int size = pow(2, level) - 1;
 	shared_ptr<node> parent = root;
@@ -186,10 +205,24 @@ tree::tree(tree&& T) {
 //R-value operator
 void tree::operator=(tree&& T) {
 	shared_ptr<node> p = root;
-	while (p && p->r_child) p = p->r_child;
-	p = nullptr;
-	root = nullptr;
-
+	while (p && p->r_child) {
+		if (p->r_child->right == root) {
+			p->r_child.reset();
+			break;
+		}
+		else p = p->r_child;
+	}
+	p = root;
+	while (p && p->right) {
+		if (p->right->right == root) {
+			p->right.reset();
+			break;
+		}
+		else {
+			p = p->right;
+		}
+	}
+	root.reset();
 	root = T.root;
 	level = T.level;
 	T.root = nullptr;
@@ -198,8 +231,23 @@ void tree::operator=(tree&& T) {
 //Destructor
 tree::~tree(){
     shared_ptr<node> p = root;
-    while(p && p->r_child) p = p->r_child;
-	p = nullptr;
+	while (p && p->r_child) {
+		if (p->r_child->right == root) {
+			p->r_child.reset();
+			break;
+		}
+		else p = p->r_child;
+	}
+	p = root;
+	while (p && p->right) {
+		if (p->right->right == root) {
+			p->right.reset();
+			break;
+		}
+		else {
+			p = p->right;
+		}
+	}
 }
 
 tree tree::ThreeTimes() {
@@ -219,6 +267,7 @@ tree tree::ThreeTimes() {
 		p1 = p1->right;
 		if (p1 == root) break;
 	}
+	p->right = T.root;
 
 	int size = pow(2, T.level) - 1;
 	shared_ptr<node> parent = T.root;
@@ -290,54 +339,24 @@ void tree::delete_level(int i){
 	}
 	last_parent->right = first_child;
 	par_nodes = num_nodes / 2;
-	/*
-	while (par_nodes) {
-		parent->l_child = child->l_child;
-		parent->l_child->right = child->r_child->right;
-		child = child->right;
-		parent->r_child = child->l_child;
-		parent->r_child->right = child->r_child->right;
-		child = child->right;
-		parent = parent->right;
-		par_nodes--;
-	}*/
-	shared_ptr<node> p1 = parent->l_child;
-	shared_ptr<node> p2 = parent->r_child;
-	while (true) {
-		shared_ptr<node> p3 = p1;
-		p1 = p1->l_child;
-		p2 = p2->l_child;
-		p1->right = p2;
-		while (p1->r_child) {
-			p1 = p1->r_child;
-			p2 = p2->l_child;
-			p1->right = p2;
-		}
-		p1 = p3->right;
-		p2 = p1->right;
-		if (p2 == first_child) {
-			p1 = p1->l_child;
-			p2 = p2->l_child;
-			p1->right = p2;
-			while (p1->r_child) {
-				p1 = p1->r_child;
-				p2 = p2->l_child;
-				if (p2) p1->right = p2;
-				else {
-					p1->right = root;
-					break;
-				}
-			}
-		}
-		if (p1->right == root) break;
-	}
-
+	
 	while (parent != first_child) {
+		parent->l_child->r_child.reset();
 		parent->l_child = parent->l_child->l_child;
+		parent->r_child->r_child.reset();
 		parent->r_child = parent->r_child->l_child;
 		parent = parent->right;
 	}
-	
+	while (first_child != root) {
+		if (first_child->right.use_count() == 1) {
+			first_child->right->l_child.reset();
+			first_child->right->r_child.reset();
+			first_child->right = first_child->right->right;
+		}
+		else {
+			first_child = first_child->right;
+		}
+	}
 
 	
 }
@@ -349,15 +368,6 @@ ostream& operator<<(ostream& str, const tree& T) {
 		p = p->right;
 		if (p == T.root) break;
 	}
-	
-	cout << endl;
-    /*
-	while (p) {
-		str << p.use_count() << " ";
-		p = p->right;
-		if (p == T.root) break;
-	}
-	*/
 	return str;
 }
 
@@ -379,7 +389,7 @@ int main() {
     T4 = T3.ThreeTimes();
     cout << T4 << endl;//will print 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72
     
-    T4.delete_level(2);
+    T4.delete_level(3);
     cout << T4 <<endl;//will print 30 33 36 51 57 63 67
       
     cout<<T3.sum(T3.find(12)) << endl; //will print 133
