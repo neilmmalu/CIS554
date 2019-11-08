@@ -261,6 +261,7 @@ void tree::delete_level(int i){
 
 	shared_ptr<node> child = parent->l_child;
 
+	
 	//If its the last level of the tree
 	if (!child->l_child) {
 		shared_ptr<node> p = child;
@@ -279,7 +280,7 @@ void tree::delete_level(int i){
 		parent->right = root;
 		return;
 	}
-
+	
 	int par_nodes = num_nodes / 2;
 	shared_ptr<node> first_child = child->l_child;
 	shared_ptr<node> last_parent = parent;
@@ -289,6 +290,7 @@ void tree::delete_level(int i){
 	}
 	last_parent->right = first_child;
 	par_nodes = num_nodes / 2;
+	/*
 	while (par_nodes) {
 		parent->l_child = child->l_child;
 		parent->l_child->right = child->r_child->right;
@@ -298,7 +300,46 @@ void tree::delete_level(int i){
 		child = child->right;
 		parent = parent->right;
 		par_nodes--;
+	}*/
+	shared_ptr<node> p1 = parent->l_child;
+	shared_ptr<node> p2 = parent->r_child;
+	while (true) {
+		shared_ptr<node> p3 = p1;
+		p1 = p1->l_child;
+		p2 = p2->l_child;
+		p1->right = p2;
+		while (p1->r_child) {
+			p1 = p1->r_child;
+			p2 = p2->l_child;
+			p1->right = p2;
+		}
+		p1 = p3->right;
+		p2 = p1->right;
+		if (p2 == first_child) {
+			p1 = p1->l_child;
+			p2 = p2->l_child;
+			p1->right = p2;
+			while (p1->r_child) {
+				p1 = p1->r_child;
+				p2 = p2->l_child;
+				if (p2) p1->right = p2;
+				else {
+					p1->right = root;
+					break;
+				}
+			}
+		}
+		if (p1->right == root) break;
 	}
+
+	while (parent != first_child) {
+		parent->l_child = parent->l_child->l_child;
+		parent->r_child = parent->r_child->l_child;
+		parent = parent->right;
+	}
+	
+
+	
 }
 
 ostream& operator<<(ostream& str, const tree& T) {
@@ -337,7 +378,7 @@ int main() {
     T4 = T3.ThreeTimes();
     cout << T4 << endl;//will print 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72
     
-    T4.delete_level(3);
+    T4.delete_level(2);
     cout << T4 <<endl;//will print 30 33 36 51 57 63 67
       
     cout<<T3.sum(T3.find(12)) << endl; //will print 133
