@@ -146,8 +146,8 @@ tree::tree(const tree &T){
 void tree::operator=(const tree& T) {
 	shared_ptr<node> p = root;
 	while (p && p->r_child) p = p->r_child;
-	p.reset();
-	root.reset();
+	p = nullptr;
+	root = nullptr;
 
 	level = T.level;
 	shared_ptr<node> p1 = T.root;
@@ -187,8 +187,8 @@ tree::tree(tree&& T) {
 void tree::operator=(tree&& T) {
 	shared_ptr<node> p = root;
 	while (p && p->r_child) p = p->r_child;
-	p.reset();
-	root.reset();
+	p = nullptr;
+	root = nullptr;
 
 	root = T.root;
 	level = T.level;
@@ -199,7 +199,7 @@ void tree::operator=(tree&& T) {
 tree::~tree(){
     shared_ptr<node> p = root;
     while(p && p->r_child) p = p->r_child;
-    p.reset();
+	p = nullptr;
 }
 
 tree tree::ThreeTimes() {
@@ -233,16 +233,6 @@ tree tree::ThreeTimes() {
 	}
 
 	return T;
-}
-
-ostream& operator<<(ostream& str, const tree &T){
-    shared_ptr<node> p = T.root;
-    while(p){
-        str << p->value << " ";
-        p = p->right;
-        if(p == T.root) break;
-    }
-    return str;
 }
 
 shared_ptr<node> tree::find(int i){
@@ -309,6 +299,24 @@ void tree::delete_level(int i){
 		parent = parent->right;
 		par_nodes--;
 	}
+}
+
+ostream& operator<<(ostream& str, const tree& T) {
+	shared_ptr<node> p = T.root;
+	while (p) {
+		str << p->value << " ";
+		p = p->right;
+		if (p == T.root) break;
+	}
+	/*
+	cout << endl;
+	while (p) {
+		str << p.use_count() << " ";
+		p = p->right;
+		if (p == T.root) break;
+	}
+	*/
+	return str;
 }
 
 int main() {
