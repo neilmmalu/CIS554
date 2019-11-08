@@ -260,6 +260,10 @@ int tree::sum(shared_ptr<node> p){
     return p->value + sum(p->l_child) + sum(p->r_child);
 }
 
+void tree::delete_level(int i){
+    
+}
+
 int main() {
     tree T1(3);
 
