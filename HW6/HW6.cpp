@@ -76,6 +76,7 @@ tree::tree(int n){
         child = child->right;
         parent->r_child = child;
         child = child->right;
+		parent = parent->right;
     }
 }
 
@@ -84,7 +85,8 @@ tree::tree(const initializer_list<int> &V){
     auto it = V.begin();
     level = *it;
     it++;
-    int size = pow(2, levels) - 1;
+	shared_ptr<node> p;
+    int size = pow(2, level) - 1;
     for(int i = 0; i < size; i++){
         shared_ptr<node> newNode = make_shared<node>(*it);
         if(!root) { 
@@ -106,25 +108,134 @@ tree::tree(const initializer_list<int> &V){
         child = child->right;
         parent->r_child = child;
         child = child->right;
+		parent = parent->right;
     }
 }
 
 //Copy constructor
 tree::tree(const tree &T){
     level = T.level;
-    root = make_shared<node>(T.root->value);
-    shared_ptr<node> p = T.root;
+	shared_ptr<node> p;
+    shared_ptr<node> p1 = T.root;
+	while (p1) {
+		shared_ptr<node> newNode = make_shared<node>(p1->value);
+		if (!root) {
+			root = newNode;
+			p = root;
+		}
+		p->right = newNode;
+		p = newNode;
+		p1 = p1->right;
+		if (p1 == T.root) break;
+	}
 
+	int size = pow(2, level) - 1;
+	shared_ptr<node> parent = root;
+	shared_ptr<node> child = root->right;
+	if (!child) return;
+	for (int i = 0; i < size / 2; i++) {
+		parent->l_child = child;
+		child = child->right;
+		parent->r_child = child;
+		child = child->right;
+		parent = parent->right;
+	}
+}
+
+//L-Value operator
+void tree::operator=(const tree& T) {
+	shared_ptr<node> p = root;
+	while (p && p->r_child) p = p->r_child;
+	p.reset();
+	root.reset();
+
+	level = T.level;
+	shared_ptr<node> p1 = T.root;
+	while (p1) {
+		shared_ptr<node> newNode = make_shared<node>(p1->value);
+		if (!root) {
+			root = newNode;
+			p = root;
+		}
+		p->right = newNode;
+		p = newNode;
+		p1 = p1->right;
+		if (p1 == T.root) break;
+	}
+
+	int size = pow(2, level) - 1;
+	shared_ptr<node> parent = root;
+	shared_ptr<node> child = root->right;
+	if (!child) return;
+	for (int i = 0; i < size / 2; i++) {
+		parent->l_child = child;
+		child = child->right;
+		parent->r_child = child;
+		child = child->right;
+		parent = parent->right;
+	}
+}
+
+//Move Constructor
+tree::tree(tree&& T) {
+	root = T.root;
+	level = T.level;
+	T.root = nullptr;
+}
+
+//R-value operator
+void tree::operator=(tree&& T) {
+	shared_ptr<node> p = root;
+	while (p && p->r_child) p = p->r_child;
+	p.reset();
+	root.reset();
+
+	root = T.root;
+	level = T.level;
+	T.root = nullptr;
 }
 
 //Destructor
 tree::~tree(){
     shared_ptr<node> p = root;
-    while(p->r_child) p = p->r_child;
+    while(p && p->r_child) p = p->r_child;
     p.reset();
 }
 
-ostream& tree::operator<<(ostream& str, const tree &T){
+tree tree::ThreeTimes() {
+	tree T = tree();
+	T.level = level;
+	shared_ptr<node> p;
+	shared_ptr<node> p1 = root;
+
+	while (p1) {
+		shared_ptr<node> newNode = make_shared<node>(3 * p1->value);
+		if (!T.root) {
+			T.root = newNode;
+			p = T.root;
+		}
+		p->right = newNode;
+		p = newNode;
+		p1 = p1->right;
+		if (p1 == root) break;
+	}
+
+	int size = pow(2, T.level) - 1;
+	shared_ptr<node> parent = T.root;
+	shared_ptr<node> child = T.root->right;
+	if (!child) return T;
+	for (int i = 0; i < size / 2; i++) {
+		parent->l_child = child;
+		child = child->right;
+		parent->r_child = child;
+		child = child->right;
+		parent = parent->right;
+	}
+
+	return T;
+}
+
+ostream& operator<<(ostream& str, const tree &T){
     shared_ptr<node> p = T.root;
     while(p){
         str << p->value << " ";
@@ -146,7 +257,6 @@ shared_ptr<node> tree::find(int i){
 
 int tree::sum(shared_ptr<node> p){
     if(!p) return 0;
-
     return p->value + sum(p->l_child) + sum(p->r_child);
 }
 
@@ -154,7 +264,7 @@ int main() {
     tree T1(3);
 
     cout << T1 << endl; //will print 0 1 2 3 4 5 6
-
+	
     tree T2 = {4, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 };
     cout << T2 << endl; //will print 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
     
@@ -167,10 +277,10 @@ int main() {
     
     T4 = T3.ThreeTimes();
     cout << T4 << endl;//will print 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72
-    
+    /*
     T4.delete_level(3);
     cout << T4 <<endl;//will print 30 33 36 51 57 63 67
-      
+    */  
     cout<<T3.sum(T3.find(12)) << endl; //will print 133
     
     
