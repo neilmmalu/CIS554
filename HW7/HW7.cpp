@@ -1,42 +1,75 @@
-#include <iostream>\
+#include <iostream>
+#include <windows.h>
+#include <stdlib.h>
 
 using namespace std;
 
+void gotoxy(double x, double y){
+	COORD coordinates;     // coordinates is declared as COORD
+	coordinates.X = x;     // defining x-axis
+	coordinates.Y = y;     //defining  y-axis
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinates);
+}
 
+void connectTrees(int n, double x, double y, double size) {
+	double x1 = x - size / 2;
+	double x2 = x + size / 2;
+	double y1 = y - size / 2;
+	double y2 = y + size / 2;
 
-void H_layout(int i){
+	gotoxy(x1, y + 1);
+	cout << "|";
+	
+}
 
-    if(i == 1){
-        cout << "O" << endl;
-        return;
-    }
+void plot(int n, double x, double y, double size) {
+	if (n < 3) return;
 
-    if(i % 2 == 0){
-        H_layout(i - 1);
-        for(int j = 0; j < i/2; j++) cout << "|" << endl;
-        cout << "O" << endl;
-        for(int j = 0; j < i/2; j++) cout << "|" << endl;
-        H_layout(i - 1);
-        return;
-    }
+	if (n == 3) {
+		cout << "O   O" << endl;
+		cout << "|   |" << endl;
+		cout << "O-O-O" << endl;
+		cout << "|   |" << endl;
+		cout << "O   O" << endl;
+		return;
+	}
 
-    H_layout(i - 1);
-    for(int j = 0; j <= i/2; j++) cout << "\eA";
-    for(int j = 0; j < i/2; j++) cout << "-";
-    cout << "O";
-    for(int j = 0; j < i/2; j++) cout << "-";
-    for(int j = 0; j < i/2; j++) cout << endl; 
-    H_layout(i - 1);
+	connectTrees(n, x, y, size);
 
+	double x1 = x - size / 2;
+	double x2 = x + size / 2;
+	double y1 = y - size / 2;
+	double y2 = y + size / 2;
+
+	if (n % 2 == 0) {
+		plot(n - 1, x1, y1, size / 2);
+		plot(n - 1, x1, y2, size / 2);
+	}
+	else {
+		plot(n - 1, x2, y1, size / 2);
+		plot(n - 1, x2, y2, size / 2);
+	}
+	
 
 
 }
 
 int main(){
 
-    for(int i = 1; i < 4; i++){
-        H_layout(i);
-    }
+	cout << "Enter size : " << endl;
+	int n;
+	cin >> n;
+
+	system("CLS");
+	
+
+	double x = 0.5;
+	double y = 0.5;
+	double size = 0.5;
+	plot(n, x, y, size);
+
+
+
     getchar();
     getchar();
     return 0;
