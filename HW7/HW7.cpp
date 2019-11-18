@@ -15,6 +15,7 @@ void gotoxy(int x, int y){
 void plot(int n, int x, int y) {
 	if(n < 3) return;
 
+	//Base case
 	if(n == 3){
 		gotoxy(x - 2, y - 2);
 		cout << "O   O";
@@ -29,6 +30,7 @@ void plot(int n, int x, int y) {
 		return;
 	}
 
+	//This block calculates the size that needs to be adjusted for the next coordinates
 	int num3T = pow(2, (n - 3));
 	int len;
 	if (n % 2 == 0) {
@@ -42,26 +44,36 @@ void plot(int n, int x, int y) {
 	total += (len - 1);
 	int pos = total / 2;
 
+	//If even, vertically add smaller blocks
 	if(n % 2 == 0){
 		int y_top = y - (pos/2 + 1);
 		int y_bottom = y + (pos/2 + 1);
+
+		//Recursive step
 		plot(n - 1, x, y_top);
 		plot(n - 1, x, y_bottom);
 		int start = y_top + 1;
 		int end = y_bottom - 1;
+
+		//Connect the two blocks
 		for(int i = start; i <= end; i++){
 			gotoxy(x, i);
 			if(i == y) cout << "O";
 			else cout << "|";
 		}
 	}
+	//If odd, add horizontally
 	else{
 		int x_left = x - (pos/2 + 1);
 		int x_right = x + (pos/2 + 1);
+
+		//Recursive step
 		plot(n - 1, x_left, y);
 		plot(n - 1, x_right, y);
 		int start = x_left + 1;
 		int end = x_right - 1;
+
+		//Connect the two blocks horizontally
 		for(int i = start; i <= end; i++){
 			gotoxy(i, y);
 			if(i == x) cout << "O";
