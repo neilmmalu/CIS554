@@ -8,8 +8,6 @@
 
 using namespace std;
 
-//SetCursorPosition(x,y)
-
 void gotoxy(int x, int y){
 	COORD coordinates = {x,y};     // coordinates is declared as COORD
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinates);
