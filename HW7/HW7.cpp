@@ -4,6 +4,8 @@
 
 using namespace std;
 
+//SetCursorPosition(x,y)
+
 void gotoxy(double x, double y){
 	COORD coordinates;     // coordinates is declared as COORD
 	coordinates.X = x;     // defining x-axis
