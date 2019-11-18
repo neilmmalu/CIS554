@@ -30,12 +30,12 @@ void plot(int n, int x, int y) {
 
 	if(n % 2 == 0){
 		int y_top = y/2;
-		int y_bottom = y + y/2;
+		int y_bottom = y + y/2 + 1;
 		plot(n - 1, x, y_top);
 		plot(n - 1, x, y_bottom);
 		int start = y_top + 1;
 		int end = y_bottom - 1;
-		for(i = start; i <= end; i++){
+		for(int i = start; i <= end; i++){
 			gotoxy(x, i);
 			if(i == y) cout << "O";
 			else cout << "|";
@@ -43,7 +43,7 @@ void plot(int n, int x, int y) {
 	}
 	else{
 		int x_left = x/2;
-		int x_right = x + x/2;
+		int x_right = x + x/2 + 1;
 		plot(n - 1, x_left, y);
 		plot(n - 1, x_right, y);
 		int start = x_left + 1;
@@ -64,7 +64,14 @@ int main(){
 
 	system("CLS");
 	
-	plot(n, n, n);
+	if (n % 2 == 0) {
+		plot(n, n-1, 2 * (n-1) + 1);
+	}
+	else {
+		plot(n, n-1, n-1);
+	}
+
+	
 
 
 
