@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
 #include <stdlib.h>
+#include <math.h>
 
 using namespace std;
 
@@ -28,9 +29,22 @@ void plot(int n, int x, int y) {
 		return;
 	}
 
+	int num3T = pow(2, (n - 3));
+	int len;
+	if (n % 2 == 0) {
+		int temp = pow(2, (n - 2));
+		len = sqrt(temp);
+	}
+	else {
+		len = sqrt(num3T);
+	}
+	int total = len * 5;
+	total += (len - 1);
+	int pos = total / 2;
+
 	if(n % 2 == 0){
-		int y_top = y/2;
-		int y_bottom = y + y/2 + 1;
+		int y_top = y - (pos/2 + 1);
+		int y_bottom = y + (pos/2 + 1);
 		plot(n - 1, x, y_top);
 		plot(n - 1, x, y_bottom);
 		int start = y_top + 1;
@@ -42,8 +56,8 @@ void plot(int n, int x, int y) {
 		}
 	}
 	else{
-		int x_left = x/2;
-		int x_right = x + x/2 + 1;
+		int x_left = x - (pos/2 + 1);
+		int x_right = x + (pos/2 + 1);
 		plot(n - 1, x_left, y);
 		plot(n - 1, x_right, y);
 		int start = x_left + 1;
@@ -63,12 +77,25 @@ int main(){
 	cin >> n;
 
 	system("CLS");
-	
+
+	int num3T = pow(2, (n - 3));
+	int len;
 	if (n % 2 == 0) {
-		plot(n, n-1, 2 * (n-1) + 1);
+		int temp = pow(2, (n - 2));
+		len = sqrt(temp);
 	}
 	else {
-		plot(n, n-1, n-1);
+		len = sqrt(num3T);
+	}
+	int total = len * 5;
+	total += (len-1);
+	int pos = total / 2;
+
+	if (n % 2 == 0) {
+		plot(n, pos, total);
+	}
+	else {
+		plot(n, pos, pos);
 	}
 
 	
