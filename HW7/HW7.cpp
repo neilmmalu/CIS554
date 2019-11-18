@@ -6,57 +6,54 @@ using namespace std;
 
 //SetCursorPosition(x,y)
 
-void gotoxy(double x, double y){
-	COORD coordinates;     // coordinates is declared as COORD
-	coordinates.X = x;     // defining x-axis
-	coordinates.Y = y;     //defining  y-axis
+void gotoxy(int x, int y){
+	COORD coordinates = {x,y};     // coordinates is declared as COORD
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordinates);
 }
 
-void connectTrees(int n, double x, double y, double size) {
-	double x1 = x - size / 2;
-	double x2 = x + size / 2;
-	double y1 = y - size / 2;
-	double y2 = y + size / 2;
+void plot(int n, int x, int y) {
+	if(n < 3) return;
 
-	cout << "x : " << x << " y: " << y << endl;
-
-	gotoxy(x1, y + 1);
-	SetCursorPos(x1, y + 1);
-	cout << "LOL";
-	
-}
-
-void plot(int n, double x, double y, double size) {
-	if (n < 3) return;
-
-	if (n == 3) {
-		cout << "O   O" << endl;
-		cout << "|   |" << endl;
-		cout << "O-O-O" << endl;
-		cout << "|   |" << endl;
-		cout << "O   O" << endl;
+	if(n == 3){
+		gotoxy(x - 2, y - 2);
+		cout << "O   O";
+		gotoxy(x - 2, y - 1);
+		cout << "|   |";
+		gotoxy(x - 2, y);
+		cout << "O-O-O";
+		gotoxy(x - 2, y + 1);
+		cout << "|   |";
+		gotoxy(x - 2, y + 2);
+		cout << "O   O";
 		return;
 	}
 
-	connectTrees(n, x, y, size);
-
-	double x1 = x - size / 2;
-	double x2 = x + size / 2;
-	double y1 = y - size / 2;
-	double y2 = y + size / 2;
-
-	if (n % 2 == 0) {
-		plot(n - 1, x1, y1, size / 2);
-		plot(n - 1, x1, y2, size / 2);
+	if(n % 2 == 0){
+		int y_top = y/2;
+		int y_bottom = y + y/2;
+		plot(n - 1, x, y_top);
+		plot(n - 1, x, y_bottom);
+		int start = y_top + 1;
+		int end = y_bottom - 1;
+		for(i = start; i <= end; i++){
+			gotoxy(x, i);
+			if(i == y) cout << "O";
+			else cout << "|";
+		}
 	}
-	else {
-		plot(n - 1, x2, y1, size / 2);
-		plot(n - 1, x2, y2, size / 2);
+	else{
+		int x_left = x/2;
+		int x_right = x + x/2;
+		plot(n - 1, x_left, y);
+		plot(n - 1, x_right, y);
+		int start = x_left + 1;
+		int end = x_right - 1;
+		for(int i = start; i <= end; i++){
+			gotoxy(i, y);
+			if(i == x) cout << "O";
+			else cout << "-";
+		}
 	}
-	
-
-
 }
 
 int main(){
@@ -67,11 +64,7 @@ int main(){
 
 	system("CLS");
 	
-
-	double x = n;
-	double y = n;
-	double size = n;
-	plot(n, x, y, size);
+	plot(n, n, n);
 
 
 
