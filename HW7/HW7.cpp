@@ -1,3 +1,6 @@
+//HW7 Neil Malu
+//SU NetID: nemalu SUID: 635692900
+
 #include <iostream>
 #include <windows.h>
 #include <stdlib.h>
