@@ -19,8 +19,11 @@ void connectTrees(int n, double x, double y, double size) {
 	double y1 = y - size / 2;
 	double y2 = y + size / 2;
 
+	cout << "x : " << x << " y: " << y << endl;
+
 	gotoxy(x1, y + 1);
-	cout << "|";
+	SetCursorPos(x1, y + 1);
+	cout << "LOL";
 	
 }
 
@@ -65,9 +68,9 @@ int main(){
 	system("CLS");
 	
 
-	double x = 0.5;
-	double y = 0.5;
-	double size = 0.5;
+	double x = n;
+	double y = n;
+	double size = n;
 	plot(n, x, y, size);
 
 
