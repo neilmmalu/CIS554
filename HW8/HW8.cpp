@@ -4,19 +4,39 @@
 typedef char Suit;
 
 class Player{
+public:
     int index;
     int numCards;
     bool active;
+    bool isDealer;
     vector<Card> hand;
 
     Player(int i){
+        numCards = 0;
         index = i;
         active = true;
     }
 
+    void addToHand(Card card);
+    Card removeCard();
+
 };
 
+void Player::addToHand(Card card){
+    hand.push_back(card);
+    numCards++;
+}
+
+Card Player::removeCard(){
+    Card c = hand[hand.size()-1];
+    hand.pop_back();
+    numCards--;
+    if(numCards < 5) active = false;
+    return c;
+}
+
 class Deck{
+public:
     vector<Card> deck;
     Deck(){
         for(int i = 1; i <= 13; i++){
@@ -60,6 +80,7 @@ void Deck::shuffle(){
 
 
 class Card{
+public:
     int val;
     Suit suit;
     char face;
