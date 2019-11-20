@@ -39,7 +39,7 @@ class Deck{
 public:
     vector<Card> deck;
     Deck(){
-        for(int i = 1; i <= 13; i++){
+        for(int i = 2; i <= 13; i++){
             if(i < 11){
                 deck.push_back(new Card('0' + i, 'D'));
                 deck.push_back(new Card('0' + i, 'S'));
@@ -58,26 +58,25 @@ public:
                 deck.push_back(new Card('Q', 'C'));
                 deck.push_back(new Card('Q', 'H'));
             }
-            else{
+            else if(i == 13){
                 deck.push_back(new Card('K', 'D'));
                 deck.push_back(new Card('K', 'S'));
                 deck.push_back(new Card('K', 'C'));
                 deck.push_back(new Card('K', 'H'));
             }
+            else{
+                deck.push_back(new Card('A', 'D'));
+                deck.push_back(new Card('A', 'S'));
+                deck.push_back(new Card('A', 'C'));
+                deck.push_back(new Card('A', 'H'));
+            }
         }
-
-        shuffle();   
+ 
     }
 
-    void shuffle();
+    void shuffle(){ random_shuffle(deck.begin(), deck.end()); }
 
 };
-
-void Deck::shuffle(){
-    random_shuffle(deck.begin(), deck.end());
-}
-
-
 
 class Card{
 public:
@@ -100,7 +99,7 @@ void Card::setVal(char f){
     if(f == 'K') { val = 13; return; }
     if(f == 'Q') { val = 12; return; }
     if(f == 'J') { val = 11; return; }
-    if(f == 'A') { val = 1; return; }
+    if(f == 'A') { val =  1; return; }
 
     val = f - '0';
 }
@@ -110,6 +109,31 @@ ostream& Card::operator<<(ostream& str, Card &c){
     return str;
 }
 
+void battle(int n){
+
+    //Setting up the players
+    int numPlayers = n;
+    int numActivePlayers = n;
+
+    vector<Player> players;
+    for(int i = 1; i <= n; i++){
+        Player player = new Player(i);
+        players.push_back(player);
+    }
+
+
+    //Setting up the deck of cards
+    Deck D = new Deck();
+
+    while(numActivePlayers > 1){
+
+    }
+}
+
 int main(){
+    cout << "Number of players: " << endl;
+    int n;
+    cin >> n;
+    battle(n); 
     return 0;
 }
