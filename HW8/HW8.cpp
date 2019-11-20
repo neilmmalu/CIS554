@@ -32,7 +32,6 @@ Card Player::removeCard(){
     Card c = hand[hand.size()-1];
     hand.pop_back();
     numCards--;
-    if(numCards < 5) active = false;
     return c;
 }
 
@@ -188,11 +187,38 @@ void game(int n, int x){
         cout << p << endl;
     }
 
-    
-
     //Game loop
     while(numActivePlayers > 1){
+
+        for(auto p: players){
+            cout << "Hand " << p.index << endl << endl;
+            cout << p << endl;
+        }
+        cout << endl;
+
+        //create the table
+        vector<Card> table;
+        for(auto p : player){
+            table.push_back(p.removeCard());
+        }
+
+        int min = INT_MAX;
+        for(int i = 0; i < n; i++){
+            cout << "Table " << i << endl;
+            cout << table[i] << endl;
+            cout << endl;
+
+            if(table[i].val < min) min = table[i].val;
+
+            //Case of tie
+            else if(table[i].val == min){
+
+            }
+        }
+
         //individual battle
+
+        
     }
 
 
