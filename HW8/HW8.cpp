@@ -15,11 +15,12 @@ public:
         numCards = 0;
         index = i;
         active = true;
+        isDealer = false;
     }
 
     void addToHand(Card card);
     Card removeCard();
-
+    friend ostream& operator<<(ostream& str, Player &P);
 };
 
 void Player::addToHand(Card card){
@@ -33,6 +34,14 @@ Card Player::removeCard(){
     numCards--;
     if(numCards < 5) active = false;
     return c;
+}
+
+ostream& Player::operator<<(ostream& str, Player &P){
+    auto it = P.hand.begin();
+    while(it != P.hand.end()){
+        str << *it << " ";
+    }
+    return str;
 }
 
 class Deck{
@@ -76,7 +85,25 @@ public:
 
     void shuffle(){ random_shuffle(deck.begin(), deck.end()); }
 
+    Card removeCard();
+
+    friend ostream& operator<<(ostream &str, Deck &D);
+
 };
+
+Card Deck::removeCard(){
+    Card c = deck[deck.size()-1];
+    deck.pop_back();
+    return c;
+}
+
+ostream& Deck::operator<<(ostream &str, Deck &D){
+    auto it = D.deck.begin();
+    while(it != D.deck.end()){
+        str << *it << " ";
+    }
+    return str;
+}
 
 class Card{
 public:
@@ -109,7 +136,24 @@ ostream& Card::operator<<(ostream& str, Card &c){
     return str;
 }
 
-void battle(int n){
+/*
+*   n : number of players 
+*   x : player index who is the dealer
+*/
+void game(int n, int x){
+
+    //Setting up the deck of cards
+    Deck D = new Deck();
+
+    cout << "***************DECK BEFORE SHUFFLE***************" << endl;
+    D.shuffle();
+    cout << "***************DECK AFTER SHUFFLE***************" << endl;
+
+    
+
+    if(x < 1) return;
+
+    if(x > n) x = 1;
 
     //Setting up the players
     int numPlayers = n;
@@ -118,15 +162,47 @@ void battle(int n){
     vector<Player> players;
     for(int i = 1; i <= n; i++){
         Player player = new Player(i);
+        if(i == x){
+            player.isDealer = true;
+        } 
         players.push_back(player);
     }
 
 
-    //Setting up the deck of cards
-    Deck D = new Deck();
 
+
+    //Dealing cards
+    auto it1 = players.begin();
+    while(!it1->isDealer) it1++;
+    it1++;
+    while(!D.deck.empty()){
+        if(it1 == players.end()) it1 = players.begin();
+        it1->hand.push_back(D.removeCard());
+        it1++;   
+    }
+
+    cout << "***************AFTER CARDS ARE DEALT***************" << endl;
+
+    for(auto p: players){
+        cout << "Cards for player " << p.index << endl;
+        cout << p << endl;
+    }
+
+    
+
+    //Game loop
     while(numActivePlayers > 1){
+        //individual battle
+    }
 
+
+
+    //If user wants to play again, the dealer will shift to the next player
+    cout << "Play again? Y for yes." << endl;
+    char c;
+    cin >> c;
+    if(c == 'Y' || c == 'y'){
+        game(n, x+1);
     }
 }
 
@@ -134,6 +210,12 @@ int main(){
     cout << "Number of players: " << endl;
     int n;
     cin >> n;
-    battle(n); 
+
+    cout << "Which player is the dealer?" << endl;
+    int x;
+    cin >> x;
+
+
+    game(n, x); 
     return 0;
 }
