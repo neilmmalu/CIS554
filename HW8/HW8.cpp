@@ -1,7 +1,43 @@
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
+#include <algorithm>
+
+using namespace std;
 
 typedef char Suit;
+
+
+class Card {
+public:
+	int val;
+	Suit suit;
+	char face;
+
+	Card(char i, Suit j) {
+		face = i;
+		suit = j;
+		setVal(i);
+	}
+
+	void setVal(Suit j);
+
+	friend ostream& operator<<(ostream& str, Card& c);
+};
+
+void Card::setVal(Suit f) {
+	if (f == 'K') { val = 13; return; }
+	if (f == 'Q') { val = 12; return; }
+	if (f == 'J') { val = 11; return; }
+	if (f == 'A') { val = 1; return; }
+
+	val = f - '0';
+}
+
+ostream& operator<<(ostream& str, Card& c) {
+	str << c.face << c.suit;
+	return str;
+}
 
 class Player{
 public:
@@ -35,7 +71,7 @@ Card Player::removeCard(){
     return c;
 }
 
-ostream& Player::operator<<(ostream& str, Player &P){
+ostream& operator<<(ostream& str, Player& P) {
     auto it = P.hand.begin();
     while(it != P.hand.end()){
         str << *it << " ";
@@ -45,7 +81,7 @@ ostream& Player::operator<<(ostream& str, Player &P){
 
 class Deck{
 public:
-    vector<Card> deck;
+    vector<Card*> deck;
     Deck(){
         for(int i = 2; i <= 13; i++){
             if(i < 11){
@@ -91,12 +127,12 @@ public:
 };
 
 Card Deck::removeCard(){
-    Card c = deck[deck.size()-1];
+    Card* c = deck[deck.size()-1];
     deck.pop_back();
-    return c;
+    return *c;
 }
 
-ostream& Deck::operator<<(ostream &str, Deck &D){
+ostream& operator<<(ostream &str, Deck &D){
     auto it = D.deck.begin();
     while(it != D.deck.end()){
         str << *it << " ";
@@ -104,36 +140,6 @@ ostream& Deck::operator<<(ostream &str, Deck &D){
     return str;
 }
 
-class Card{
-public:
-    int val;
-    Suit suit;
-    char face;
-
-    Card(char i, Suit j){
-        face = i;
-        suit = j;
-        setVal(i);
-    }
-
-    void setVal(Suit j);
-
-    friend ostream& operator<<(ostream& str, Card &c);
-};
-
-void Card::setVal(char f){
-    if(f == 'K') { val = 13; return; }
-    if(f == 'Q') { val = 12; return; }
-    if(f == 'J') { val = 11; return; }
-    if(f == 'A') { val =  1; return; }
-
-    val = f - '0';
-}
-
-ostream& Card::operator<<(ostream& str, Card &c){
-    str << face << suit;
-    return str;
-}
 
 /*
 *   n : number of players 
@@ -142,10 +148,10 @@ ostream& Card::operator<<(ostream& str, Card &c){
 void game(int n, int x){
 
     //Setting up the deck of cards
-    Deck D = new Deck();
+    Deck* D = new Deck();
 
     cout << "***************DECK BEFORE SHUFFLE***************" << endl;
-    D.shuffle();
+    D->shuffle();
     cout << "***************DECK AFTER SHUFFLE***************" << endl;
 
     
@@ -158,11 +164,11 @@ void game(int n, int x){
     int numPlayers = n;
     int numActivePlayers = n;
 
-    vector<Player> players;
+    vector<Player*> players;
     for(int i = 1; i <= n; i++){
-        Player player = new Player(i);
+        Player* player = new Player(i);
         if(i == x){
-            player.isDealer = true;
+            player->isDealer = true;
         } 
         players.push_back(player);
     }
@@ -172,18 +178,18 @@ void game(int n, int x){
 
     //Dealing cards
     auto it1 = players.begin();
-    while(!it1->isDealer) it1++;
+    while(!(*it1)->isDealer) it1++;
     it1++;
-    while(!D.deck.empty()){
+    while(!D->deck.empty()){
         if(it1 == players.end()) it1 = players.begin();
-        it1->hand.push_back(D.removeCard());
+        (*it1)->hand.push_back(D->removeCard());
         it1++;   
     }
 
     cout << "***************AFTER CARDS ARE DEALT***************" << endl;
 
     for(auto p: players){
-        cout << "Cards for player " << p.index << endl;
+        cout << "Cards for player " << p->index << endl;
         cout << p << endl;
     }
 
@@ -191,15 +197,15 @@ void game(int n, int x){
     while(numActivePlayers > 1){
 
         for(auto p: players){
-            cout << "Hand " << p.index << endl << endl;
+            cout << "Hand " << p->index << endl << endl;
             cout << p << endl;
         }
         cout << endl;
 
         //create the table
         vector<Card> table;
-        for(auto p : player){
-            table.push_back(p.removeCard());
+        for(auto p : players){
+            table.push_back(p->removeCard());
         }
 
         int min = INT_MAX;
