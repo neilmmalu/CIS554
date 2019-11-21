@@ -140,6 +140,13 @@ ostream& operator<<(ostream &str, Deck &D){
     return str;
 }
 
+ostream& operator<<(ostream& str, vector<Card>& V) {
+	auto it = V.begin();
+	while (it != V.end()) {
+		str << *it << " ";
+	}
+	return str;
+}
 
 /*
 *   n : number of players 
@@ -204,22 +211,73 @@ void game(int n, int x){
 
         //create the table
         vector<Card> table;
+
+		//Need to figure out how to offset inactive players in the table
+		//Probably a dummy card with val = 0
         for(auto p : players){
-            table.push_back(p->removeCard());
+			if (p->active) table.push_back(p->removeCard());
+			else table.push_back(nullptr);
         }
 
+		//Find the minimum in the table
         int min = INT_MAX;
+		int minIndex;
         for(int i = 0; i < n; i++){
             cout << "Table " << i << endl;
             cout << table[i] << endl;
             cout << endl;
 
-            if(table[i].val < min) min = table[i].val;
+			if (table[i].val < min) {
+				min = table[i].val;
+				minIndex = i;
+			}
 
             //Case of tie
             else if(table[i].val == min){
 
+				vector<Card> tie1;
+				vector<Card> tie2;
+
+				tie1.push_back(table[minIndex]);
+				tie1.push_back(players[minIndex]->removeCard());
+				tie1.push_back(players[minIndex]->removeCard());
+
+				tie2.push_back(table[i]);
+				tie2.push_back(players[i]->removeCard());
+				tie2.push_back(players[i]->removeCard());
+
+				for (auto p : players) {
+					cout << "Hand " << p->index << endl << endl;
+					cout << p << endl;
+				}
+				cout << endl;
+
+				for (int j = 0; j < n; j++) {
+					cout << "Table " << j << endl;
+					if (j == minIndex) {
+						cout << tie1 << endl;
+					}
+					else if (j == i) {
+						cout << tie2 << endl;
+					}
+					else {
+						cout << table[j] << endl;
+					}
+					cout << endl;
+				}
+
+				Card c1 = tie1[tie1.size() - 1];
+				Card c2 = tie2[tie2.size() - 1];
+
+				if (c2.val < c1.val) minIndex = i;
+
+				//Need to add all the tie cards except first one, to the winners hands
             }
+
+			//MinIndex is the index of the lowest card
+			//Need to add all of the cards in the table to winner
+			//Check if any player is below 5 cards and change active = false
+
         }
 
         //individual battle
