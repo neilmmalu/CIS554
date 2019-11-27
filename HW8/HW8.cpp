@@ -148,6 +148,18 @@ ostream& operator<<(ostream& str, vector<Card>& V) {
 	return str;
 }
 
+class Battle{
+    map<Player, Card> table;
+    
+    void createTable(vector<Player> &players);
+};
+
+void Battle::createTable(vector<Player> &players){
+    for(auto p : players){
+
+    }
+}
+
 /*
 *   n : number of players 
 *   x : player index who is the dealer
