@@ -148,17 +148,6 @@ ostream& operator<<(ostream& str, vector<Card>& V) {
 	return str;
 }
 
-class Battle{
-    map<Player, Card> table;
-    
-    void createTable(vector<Player> &players);
-};
-
-void Battle::createTable(vector<Player> &players){
-    for(auto p : players){
-
-    }
-}
 
 /*
 *   n : number of players 
@@ -170,9 +159,10 @@ void game(int n, int x){
     Deck* D = new Deck();
 
     cout << "***************DECK BEFORE SHUFFLE***************" << endl;
+    cout << *D << endl;
     D->shuffle();
     cout << "***************DECK AFTER SHUFFLE***************" << endl;
-
+    cout << *D << endl;
     
 
     if(x < 1) return;
@@ -228,7 +218,7 @@ void game(int n, int x){
 		//Probably a dummy card with val = 0
         for(auto p : players){
 			if (p->active) table.push_back(p->removeCard());
-			else table.push_back(nullptr);
+			else table.push_back(Card('0','0'));
         }
 
 		//Find the minimum in the table
@@ -236,8 +226,10 @@ void game(int n, int x){
 		int minIndex;
         for(int i = 0; i < n; i++){
             cout << "Table " << i << endl;
-            cout << table[i] << endl;
+            if(players[i]->active) cout << table[i] << endl;
             cout << endl;
+
+            if(!players[i]->active) continue;
 
 			if (table[i].val < min) {
 				min = table[i].val;
@@ -260,12 +252,14 @@ void game(int n, int x){
 
 				for (auto p : players) {
 					cout << "Hand " << p->index << endl << endl;
-					cout << p << endl;
+					if(p->active) cout << p << endl;
 				}
 				cout << endl;
 
 				for (int j = 0; j < n; j++) {
+
 					cout << "Table " << j << endl;
+                    if(!players[j]->active) continue;
 					if (j == minIndex) {
 						cout << tie1 << endl;
 					}
