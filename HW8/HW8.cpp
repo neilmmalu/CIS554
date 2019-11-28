@@ -56,6 +56,7 @@ public:
 
     void addToHand(Card card);
     Card removeCard();
+    void shuffle(){ random_shuffle(hand.begin(), hand.end()); }
     friend ostream& operator<<(ostream& str, Player &P);
 };
 
@@ -283,6 +284,19 @@ void game(int n, int x){
 			//MinIndex is the index of the lowest card
 			//Need to add all of the cards in the table to winner
 			//Check if any player is below 5 cards and change active = false
+            for(auto c : table) players[minIndex]->addToHand(c);
+            players[minIndex]->shuffle();
+
+            for(auto p : players){
+                if(p->numCards < 5){
+                    p->active = false;
+                    numActivePlayers--;
+                    while(p->numCards > 0){
+                        players[minIndex]->addToHand(p->removeCard());
+                    }
+                }
+            }
+            
 
         }
 
