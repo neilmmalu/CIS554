@@ -232,7 +232,7 @@ void game(int n, int x){
 
             if(!players[i]->active) continue;
 
-			if (table[i].val < min) {
+			if (table[i].val < min && table[i].val != 0) {
 				min = table[i].val;
 				minIndex = i;
 			}
@@ -280,27 +280,22 @@ void game(int n, int x){
 
 				//Need to add all the tie cards except first one, to the winners hands
             }
+        }
+        //MinIndex is the index of the lowest card
+        //Need to add all of the cards in the table to winner
+        //Check if any player is below 5 cards and change active = false
+        for(auto c : table) players[minIndex]->addToHand(c);
+        players[minIndex]->shuffle();
 
-			//MinIndex is the index of the lowest card
-			//Need to add all of the cards in the table to winner
-			//Check if any player is below 5 cards and change active = false
-            for(auto c : table) players[minIndex]->addToHand(c);
-            players[minIndex]->shuffle();
-
-            for(auto p : players){
-                if(p->numCards < 5){
-                    p->active = false;
-                    numActivePlayers--;
-                    while(p->numCards > 0){
-                        players[minIndex]->addToHand(p->removeCard());
-                    }
+        for(auto p : players){
+            if(p->numCards < 5){
+                p->active = false;
+                numActivePlayers--;
+                while(p->numCards > 0){
+                    players[minIndex]->addToHand(p->removeCard());
                 }
             }
-            
-
         }
-
-        //individual battle
 
         
     }
