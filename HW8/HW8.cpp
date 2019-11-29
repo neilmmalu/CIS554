@@ -348,18 +348,14 @@ void game(int n, int x){
 
 
 	//Need to delete deck, players and all pointers to avoid mem leaks
+	for (auto c : D->deck) {
+		delete c;
+	}
+	delete D;
 
-
-    //If user wants to play again, the dealer will shift to the next player
-
-	/*
-    cout << "Play again? Y for yes." << endl;
-    char c;
-    cin >> c;
-    if(c == 'Y' || c == 'y'){
-        game(n, x+1);
-    }
-	*/
+	for (auto p : players) {
+		delete p;
+	}
 }
 
 int main(){
