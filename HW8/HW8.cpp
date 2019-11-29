@@ -333,6 +333,11 @@ void game(int n, int x){
     }
 
 	for (auto p : players) {
+		cout << "Hand " << p->index << endl;
+		cout << *p << endl << endl;
+	}
+
+	for (auto p : players) {
 		if (p->active) cout << "Player " << p->index << " wins!" << endl;
 	}
 
@@ -341,12 +346,15 @@ void game(int n, int x){
 
 
     //If user wants to play again, the dealer will shift to the next player
+
+	/*
     cout << "Play again? Y for yes." << endl;
     char c;
     cin >> c;
     if(c == 'Y' || c == 'y'){
         game(n, x+1);
     }
+	*/
 }
 
 int main(){
@@ -354,11 +362,14 @@ int main(){
     int n;
     cin >> n;
 
+	if (n > 6) return 0;
+
     cout << "Which player is the dealer?" << endl;
     int x;
     cin >> x;
 
 
     game(n, x); 
+
     return 0;
 }
