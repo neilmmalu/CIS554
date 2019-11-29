@@ -5,36 +5,40 @@
 
 using namespace std;
 
-typedef char Suit;
-
 
 class Card {
 public:
 	int val;
-	Suit suit;
+	char suit;
 	char face;
 
-	Card(char i, Suit j) {
+	Card(char i, char j) {
 		face = i;
 		suit = j;
 		setVal(i);
 	}
 
-	void setVal(Suit j);
+	void setVal(char j);
 
 	friend ostream& operator<<(ostream& str, Card& c);
 };
 
-void Card::setVal(Suit f) {
+void Card::setVal(char f) {
 	if (f == 'K') { val = 13; return; }
 	if (f == 'Q') { val = 12; return; }
 	if (f == 'J') { val = 11; return; }
 	if (f == 'A') { val = 1; return; }
+	if (f == 'X') { val = 10; return; }
 
 	val = f - '0';
 }
 
 ostream& operator<<(ostream& str, Card& c) {
+	if (c.face == 'X') {
+		str << "10" << c.suit;
+		return str;
+	}
+
 	str << c.face << c.suit;
 	return str;
 }
@@ -76,6 +80,7 @@ ostream& operator<<(ostream& str, Player& P) {
     auto it = P.hand.begin();
     while(it != P.hand.end()){
         str << *it << " ";
+		it++;
     }
     return str;
 }
@@ -84,13 +89,25 @@ class Deck{
 public:
     vector<Card*> deck;
     Deck(){
-        for(int i = 2; i <= 13; i++){
-            if(i < 11){
+        for(int i = 1; i <= 13; i++){
+			if (i == 1) {
+				deck.push_back(new Card('A', 'D'));
+				deck.push_back(new Card('A', 'S'));
+				deck.push_back(new Card('A', 'C'));
+				deck.push_back(new Card('A', 'H'));
+			}
+            else if(i < 10){
                 deck.push_back(new Card('0' + i, 'D'));
                 deck.push_back(new Card('0' + i, 'S'));
                 deck.push_back(new Card('0' + i, 'C'));
                 deck.push_back(new Card('0' + i, 'H'));
             }
+			else if (i == 10) {
+				deck.push_back(new Card('X', 'D'));
+				deck.push_back(new Card('X', 'S'));
+				deck.push_back(new Card('X', 'C'));
+				deck.push_back(new Card('X', 'H'));
+			}
             else if(i == 11){
                 deck.push_back(new Card('J', 'D'));
                 deck.push_back(new Card('J', 'S'));
@@ -103,17 +120,11 @@ public:
                 deck.push_back(new Card('Q', 'C'));
                 deck.push_back(new Card('Q', 'H'));
             }
-            else if(i == 13){
+            else {
                 deck.push_back(new Card('K', 'D'));
                 deck.push_back(new Card('K', 'S'));
                 deck.push_back(new Card('K', 'C'));
                 deck.push_back(new Card('K', 'H'));
-            }
-            else{
-                deck.push_back(new Card('A', 'D'));
-                deck.push_back(new Card('A', 'S'));
-                deck.push_back(new Card('A', 'C'));
-                deck.push_back(new Card('A', 'H'));
             }
         }
  
@@ -136,7 +147,8 @@ Card Deck::removeCard(){
 ostream& operator<<(ostream &str, Deck &D){
     auto it = D.deck.begin();
     while(it != D.deck.end()){
-        str << *it << " ";
+        str << **it << " ";
+		it++;
     }
     return str;
 }
@@ -145,6 +157,7 @@ ostream& operator<<(ostream& str, vector<Card>& V) {
 	auto it = V.begin();
 	while (it != V.end()) {
 		str << *it << " ";
+		it++;
 	}
 	return str;
 }
@@ -192,7 +205,7 @@ void game(int n, int x){
     it1++;
     while(!D->deck.empty()){
         if(it1 == players.end()) it1 = players.begin();
-        (*it1)->hand.push_back(D->removeCard());
+        (*it1)->addToHand(D->removeCard());
         it1++;   
     }
 
@@ -200,15 +213,16 @@ void game(int n, int x){
 
     for(auto p: players){
         cout << "Cards for player " << p->index << endl;
-        cout << p << endl;
+        cout << *p << endl;
     }
 
+	cout << endl;
     //Game loop
     while(numActivePlayers > 1){
 
         for(auto p: players){
-            cout << "Hand " << p->index << endl << endl;
-            cout << p << endl;
+            cout << "Hand " << p->index << endl;
+            cout << *p << endl << endl;
         }
         cout << endl;
 
@@ -225,8 +239,10 @@ void game(int n, int x){
 		//Find the minimum in the table
         int min = INT_MAX;
 		int minIndex;
+		bool tie = false;
+		int tieIndex;
         for(int i = 0; i < n; i++){
-            cout << "Table " << i << endl;
+            cout << "Table " << (i+1) << endl;
             if(players[i]->active) cout << table[i] << endl;
             cout << endl;
 
@@ -240,55 +256,69 @@ void game(int n, int x){
             //Case of tie
             else if(table[i].val == min){
 
-				vector<Card> tie1;
-				vector<Card> tie2;
-
-				tie1.push_back(table[minIndex]);
-				tie1.push_back(players[minIndex]->removeCard());
-				tie1.push_back(players[minIndex]->removeCard());
-
-				tie2.push_back(table[i]);
-				tie2.push_back(players[i]->removeCard());
-				tie2.push_back(players[i]->removeCard());
-
-				for (auto p : players) {
-					cout << "Hand " << p->index << endl << endl;
-					if(p->active) cout << p << endl;
-				}
-				cout << endl;
-
-				for (int j = 0; j < n; j++) {
-
-					cout << "Table " << j << endl;
-                    if(!players[j]->active) continue;
-					if (j == minIndex) {
-						cout << tie1 << endl;
-					}
-					else if (j == i) {
-						cout << tie2 << endl;
-					}
-					else {
-						cout << table[j] << endl;
-					}
-					cout << endl;
-				}
-
-				Card c1 = tie1[tie1.size() - 1];
-				Card c2 = tie2[tie2.size() - 1];
-
-				if (c2.val < c1.val) minIndex = i;
-
+				tie = true;
+				tieIndex = i;
 				//Need to add all the tie cards except first one, to the winners hands
             }
+
+
         }
+
+		if (tie) {
+			vector<Card> tie1;
+			vector<Card> tie2;
+
+			tie1.push_back(table[minIndex]);
+			tie1.push_back(players[minIndex]->removeCard());
+			tie1.push_back(players[minIndex]->removeCard());
+
+			tie2.push_back(table[tieIndex]);
+			tie2.push_back(players[tieIndex]->removeCard());
+			tie2.push_back(players[tieIndex]->removeCard());
+
+			for (auto p : players) {
+				cout << "Hand " << p->index << endl;
+				if (p->active) cout << *p << endl << endl;
+			}
+			cout << endl;
+
+			for (int j = 0; j < n; j++) {
+
+				cout << "Table " << (j+1) << endl;
+				if (!players[j]->active) continue;
+				if (j == minIndex) {
+					cout << tie1 << endl;
+				}
+				else if (j == tieIndex) {
+					cout << tie2 << endl;
+				}
+				else {
+					cout << table[j] << endl;
+				}
+				cout << endl;
+			}
+
+			Card c1 = tie1[tie1.size() - 1];
+			Card c2 = tie2[tie2.size() - 1];
+
+			if (c2.val < c1.val) minIndex = tieIndex;
+
+			players[minIndex]->addToHand(tie1[1]);
+			players[minIndex]->addToHand(tie1[2]);
+			players[minIndex]->addToHand(tie2[1]);
+			players[minIndex]->addToHand(tie2[2]);
+		}
+
         //MinIndex is the index of the lowest card
         //Need to add all of the cards in the table to winner
         //Check if any player is below 5 cards and change active = false
-        for(auto c : table) players[minIndex]->addToHand(c);
+		for (auto c : table) {
+			if(c.val != 0) players[minIndex]->addToHand(c);
+		}
         players[minIndex]->shuffle();
 
         for(auto p : players){
-            if(p->numCards < 5){
+            if(p->active && p->numCards < 5){
                 p->active = false;
                 numActivePlayers--;
                 while(p->numCards > 0){
@@ -297,9 +327,17 @@ void game(int n, int x){
             }
         }
 
+		players[minIndex]->shuffle();
+
         
     }
 
+	for (auto p : players) {
+		if (p->active) cout << "Player " << p->index << " wins!" << endl;
+	}
+
+
+	//Need to delete deck, players and all pointers to avoid mem leaks
 
 
     //If user wants to play again, the dealer will shift to the next player
