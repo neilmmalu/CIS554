@@ -1,3 +1,6 @@
+//HW8 Neil Malu
+//SU NetID: nemalu	SUID: 635692900
+
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
