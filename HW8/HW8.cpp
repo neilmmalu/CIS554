@@ -2,9 +2,14 @@
 #include <vector>
 #include <stdlib.h>
 #include <algorithm>
+#include <fstream>
+#include <random>
+#include <chrono>
 
 using namespace std;
 
+unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+default_random_engine rng(seed);
 
 class Card {
 public:
@@ -60,7 +65,7 @@ public:
 
     void addToHand(Card card);
     Card removeCard();
-    void shuffle(){ random_shuffle(hand.begin(), hand.end()); }
+	void myShuffle() { shuffle(begin(hand), end(hand), rng); }
     friend ostream& operator<<(ostream& str, Player &P);
 };
 
@@ -130,7 +135,7 @@ public:
  
     }
 
-    void shuffle(){ random_shuffle(deck.begin(), deck.end()); }
+    void myShuffle(){ shuffle(begin(deck), end(deck), rng); }
 
     Card removeCard();
 
@@ -174,7 +179,7 @@ void game(int n, int x){
 
     cout << "***************DECK BEFORE SHUFFLE***************" << endl;
     cout << *D << endl;
-    D->shuffle();
+    D->myShuffle();
     cout << "***************DECK AFTER SHUFFLE***************" << endl;
     cout << *D << endl;
     
@@ -315,7 +320,7 @@ void game(int n, int x){
 		for (auto c : table) {
 			if(c.val != 0) players[minIndex]->addToHand(c);
 		}
-        players[minIndex]->shuffle();
+        players[minIndex]->myShuffle();
 
         for(auto p : players){
             if(p->active && p->numCards < 5){
@@ -327,7 +332,7 @@ void game(int n, int x){
             }
         }
 
-		players[minIndex]->shuffle();
+		players[minIndex]->myShuffle();
 
         
     }
@@ -367,6 +372,12 @@ int main(){
     cout << "Which player is the dealer?" << endl;
     int x;
     cin >> x;
+
+
+	//Redirect std::cout to the output file
+	ofstream out("data1.txt");
+	auto* outbuff = cout.rdbuf();
+	cout.rdbuf(out.rdbuf());
 
 
     game(n, x); 
