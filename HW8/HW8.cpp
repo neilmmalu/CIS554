@@ -363,7 +363,7 @@ int main(){
     int n;
     cin >> n;
 
-	if (n > 6) return 0;
+	if (n > 7 || n < 2) return 0;
 
     cout << "Which player is the dealer?" << endl;
     int x;
