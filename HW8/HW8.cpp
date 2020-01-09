@@ -14,6 +14,7 @@ using namespace std;
 unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 default_random_engine rng(seed);
 
+//Cards
 class Card {
 public:
 	int val;
@@ -51,6 +52,8 @@ ostream& operator<<(ostream& str, Card& c) {
 	return str;
 }
 
+
+//Players
 class Player{
 public:
     int index;
@@ -93,6 +96,8 @@ ostream& operator<<(ostream& str, Player& P) {
     return str;
 }
 
+
+//Deck
 class Deck{
 public:
     vector<Card*> deck;
@@ -206,13 +211,15 @@ void game(int n, int x){
 
 
 
-
     //Dealing cards
     auto it1 = players.begin();
     while(!(*it1)->isDealer) it1++;
     it1++;
+	//it1 points to the player after the dealer
     while(!D->deck.empty()){
+		//If it1 points to the end, set it to begin
         if(it1 == players.end()) it1 = players.begin();
+		//removeCard will return a card from the deck. Add this card to the player pointed by it1
         (*it1)->addToHand(D->removeCard());
         it1++;   
     }
@@ -225,7 +232,8 @@ void game(int n, int x){
     }
 
 	cout << endl;
-    //Game loop
+
+    //Game loop. Game is active while there are multiple players
     while(numActivePlayers > 1){
 
         for(auto p: players){
@@ -237,18 +245,22 @@ void game(int n, int x){
         //create the table
         vector<Card> table;
 
-		//Need to figure out how to offset inactive players in the table
-		//Probably a dummy card with val = 0
+		//To offset inactive players in the table
+		//Add a dummy card with val = 0
+		//This makes it easier to access the cards since player index and table index will be same
         for(auto p : players){
+			//If player is active add an actual card
 			if (p->active) table.push_back(p->removeCard());
+			//else add dummy
 			else table.push_back(Card('0','0'));
         }
 
-		//Find the minimum in the table
+		//Find the minimum card on the table
         int min = INT_MAX;
 		int minIndex;
 		bool tie = false;
 		int tieIndex;
+		//For each active player, check the value, update minimum and check if its a tie
         for(int i = 0; i < n; i++){
             cout << "Table " << (i+1) << endl;
             if(players[i]->active) cout << table[i] << endl;
@@ -271,6 +283,8 @@ void game(int n, int x){
 
 
         }
+
+		//At this point, minIndex points to the index of min card. tieIndex matters only if tie == true
 
 		if (tie) {
 			vector<Card> tie1;
@@ -318,33 +332,39 @@ void game(int n, int x){
 		}
 
         //MinIndex is the index of the lowest card
-        //Need to add all of the cards in the table to winner
-        //Check if any player is below 5 cards and change active = false
+        //Add all of the cards in the table to winner
 		for (auto c : table) {
 			if(c.val != 0) players[minIndex]->addToHand(c);
 		}
+		//Once cards are added, shuffle the winner's deck
         players[minIndex]->myShuffle();
 
+		//Check if any player is below 5 cards and change active = false
         for(auto p : players){
             if(p->active && p->numCards < 5){
                 p->active = false;
                 numActivePlayers--;
+				//Add all the losers cards to the winner's hand
                 while(p->numCards > 0){
                     players[minIndex]->addToHand(p->removeCard());
                 }
             }
         }
-
+		//Shuffle the winner's deck again
 		players[minIndex]->myShuffle();
 
         
     }
 
+	//Game loop over
+
+	//Display each player's hand.
 	for (auto p : players) {
 		cout << "Hand " << p->index << endl;
 		cout << *p << endl << endl;
 	}
 
+	//Display the winner of this game
 	for (auto p : players) {
 		if (p->active) cout << "Player " << p->index << " wins!" << endl;
 	}
@@ -359,6 +379,9 @@ void game(int n, int x){
 	for (auto p : players) {
 		delete p;
 	}
+
+	//Can request a rematch in which case, just run game(n, x+1)
+
 }
 
 int main(){
